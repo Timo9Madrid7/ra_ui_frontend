@@ -1,0 +1,11 @@
+.menu_item {
+  gap: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  font-size: 11px;
+
+  svg{
+    font-size: large;
+  }
+}

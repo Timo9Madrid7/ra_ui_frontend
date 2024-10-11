@@ -1,0 +1,45 @@
+.box_container {
+  border: 1px solid #009688;
+  color: black;
+  padding: 15px;
+  margin: 10px 0;
+  cursor: pointer;
+
+  .info_container {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px;
+    align-items: center;
+
+    .selected_sim_info {
+      font-size: 10px;
+
+      svg {
+        font-size: 13px;
+      }
+
+      .indent {
+        margin-left: 0.7rem;
+      }
+
+      .info_icon {
+        display: flex;
+        align-items: center;
+        gap: 3px;
+      }
+    }
+  }
+
+  .sources_select {
+    margin-top: 10px;
+
+    .comparison_form_fields {
+      display: flex;
+      gap: 5px;
+
+      .font_sm {
+        font-size: 13px;
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+.point_marker {
+  border-radius: 13px;
+  height: 26px;
+  width: 26px;
+  border: 1px solid transparent;
+  margin: -2px -3px;
+  padding: 2px;
+
+  .circle_container {
+    display: flex;
+    height: 100%;
+    line-height: 0;
+    font-size: 10px;
+    font-weight: bold;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.purple .circle_container {
+    background: radial-gradient(
+                    circle at 40% 40%,
+                    rgb(206, 146, 225) 10%,
+                    rgb(210, 101, 246) 40%
+    );
+  }
+
+  &.purple.selected {
+    border-color: #c156ff;
+  }
+
+
+  &.green .circle_container {
+    background: radial-gradient(
+                    circle at 40% 40%,
+                    rgb(204, 253, 241) 10%,
+                    rgb(101, 246, 176) 40%
+    );
+  }
+
+  &.green.selected {
+    border-color: #5bf6d1;
+  }
+
+  &.orange .circle_container {
+    background: radial-gradient(
+                    circle at 40% 40%,
+                    rgb(255, 201, 108) 10%,
+                    rgb(225, 166, 102) 40%
+    );
+  }
+
+  &.orange.selected {
+    border-color: #daaa6f;
+  }
+
+  &.blue .circle_container {
+    background: radial-gradient(
+                    circle at 40% 40%,
+                    rgb(97, 202, 255) 10%,
+                    #1790ff 40%
+    );
+  }
+
+  &.blue.selected {
+    border-color: #0bf;
+  }
+}

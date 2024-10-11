@@ -1,0 +1,17 @@
+.manager_container {
+  display: flex;
+  align-items: center;
+  padding-left: 50px;
+  padding-right: 15px;
+  justify-content: space-between;
+
+  .switch {
+    display: flex;
+    justify-content: center;
+
+    button {
+      padding: 2px;
+    }
+  }
+}
+

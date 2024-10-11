@@ -1,0 +1,18 @@
+.footer_container {
+  border-top: 1px solid gray;
+  padding: 15px;
+
+  .footer_dates {
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  .footer_buttons {
+    display: flex;
+    margin-top: 20px;
+    text-align: right;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}

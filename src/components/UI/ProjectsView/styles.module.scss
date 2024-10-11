@@ -1,0 +1,112 @@
+.projects_view_container {
+  gap: 15px;
+  padding: 20px;
+  display: flex;
+  overflow: auto;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: flex-start;
+
+  .group_container {
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    min-height: 50px;
+    margin-bottom: 10px;
+    flex-direction: column;
+
+    .group_header {
+      color: black;
+      display: flex;
+      padding: 4px 15px;
+      border-radius: 4px;
+      background: #e8e3e3;
+      border: 1px solid #696666;
+      justify-content: space-between;
+
+      .group_title {
+        gap: 10px;
+        display: flex;
+        font-size: 14px;
+        font-weight: 500;
+        align-items: center;
+      }
+    }
+
+    .group_body {
+      width: 100%;
+      gap: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: row;
+
+      &.list_view {
+        flex-direction: column;
+      }
+
+      &.grid_view {
+        flex-direction: row;
+        @media (max-width: 900px) {
+          flex-direction: column;
+        }
+      }
+
+      .project_container {
+        color: black;
+        display: flex;
+        padding: 10px 15px;
+        cursor: pointer;
+        border-radius: 4px;
+        flex-direction: column;
+        border: 1px solid black;
+        justify-content: space-between;
+
+        &.list_item {
+          height: auto;
+          max-width: 100%;
+          min-width: 100%;
+        }
+
+        &.grid_item {
+          height: 160px;
+          min-width: 250px;
+          max-width: 250px;
+        }
+
+        .row {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          column-gap: 8px;
+
+          .project_title {
+            font-size: 13px;
+            font-weight: bold;
+          }
+
+          .model_title {
+            gap: 4px;
+            display: flex;
+            align-items: center;
+            font-size: 10px;
+          }
+
+          &:first-child {
+            display: flex;
+            justify-content: space-between;
+          }
+
+          img {
+            display: compact;
+            width: 60px;
+            margin: auto;
+          }
+        }
+      }
+
+      @media (max-width: 900px) {
+        flex-direction: column;
+      }
+    }
+  }
+}

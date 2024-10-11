@@ -1,0 +1,36 @@
+.settings_container {
+  height: 100%;
+  padding: 10px 25px;
+
+  .settings_body {
+    gap: 15px;
+    display: flex;
+    font-size: 13px;
+    margin-top: 15px;
+    flex-direction: column;
+
+    .customize_section {
+      display: flex;
+
+      .inputs {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: space-around;
+      }
+    }
+
+    .section_title {
+      margin: 5px 0;
+    }
+
+    .footnote {
+      font-size: 12px;
+      margin: 5px 0;
+
+      .blue {
+        color: #8469ff;
+      }
+    }
+  }
+}

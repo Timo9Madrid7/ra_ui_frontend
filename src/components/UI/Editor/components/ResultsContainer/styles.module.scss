@@ -1,0 +1,53 @@
+.results_container {
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  justify-content: flex-start;
+  flex-direction: column;
+  margin-left: -100%;
+  transition: 0.58s 0.65s margin cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0px;
+  align-items: center;
+  min-height: 590px;
+  min-width: 520px;
+
+  &.active {
+    margin-left: 0;
+  }
+
+
+  .comparison_container {
+    font-size: 11px;
+
+    .open_comparison_btn {
+      position: absolute;
+      bottom: 12%;
+      left: 95%;
+      z-index: 99;
+      border: 1px solid orange;
+    }
+
+    .header {
+      padding: 10px;
+      margin-bottom: 5px;
+
+      h3 {
+        text-align: center;
+      }
+    }
+
+    .comparison_panel {
+      height: 85%;
+      overflow-y: auto;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+  }
+
+}

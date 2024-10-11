@@ -1,0 +1,43 @@
+.toolbar_header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 0px 10px;
+  min-height: 50px;
+  border-bottom: 1px solid gray;
+
+  .content {
+    gap: 8px;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .icon {
+      padding-top: 5px;
+
+      .purple {
+        transform: rotate(0deg);
+        transition: transform 0.5s ease-in-out;
+
+        &:hover {
+          fill: #8f0fcc;
+          transform: rotate(90deg);
+          transition: transform 0.5s ease-in-out;
+        }
+      }
+
+      .success {
+        fill: darkcyan;
+      }
+
+      .danger {
+        fill: mediumvioletred;
+      }
+
+      .warning {
+        fill: darkorange;
+      }
+    }
+  }
+}

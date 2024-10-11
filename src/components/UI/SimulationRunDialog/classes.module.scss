@@ -1,0 +1,68 @@
+.container {
+  gap: 10px;
+  display: flex;
+  text-align: center;
+  flex-direction: column;
+
+  .note {
+    font-size: 11px;
+    color: #888484;
+  }
+
+  .image_container {
+    background-image: url("@/assets/images/simulation-banner.png");
+    box-shadow: #E0E0E2 148px 120px 203px -7px inset, #e0e0e0 2px -13px 78px 23px inset;
+    height: 220px;
+    object-fit: contain;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+
+    img {
+      height: 50%;
+      opacity: 0.7;
+    }
+  }
+}
+
+.mesh_status {
+  gap: 5px;
+  display: flex;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.running_container {
+  margin: 10px 5px;
+  padding: 5px 0;
+
+  .running_header {
+    margin-bottom: 5px;
+  }
+
+  .progress_container {
+    display: flex;
+    margin-bottom: 3px;
+
+    .progress_bar {
+      width: 90%;
+      margin: auto;
+    }
+  }
+
+  .sub_progress_bar {
+    width: 93%;
+    margin: auto;
+
+    .loading {
+      width: 95%;
+      margin-top: 5px;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.start_button {
+  width: fit-content;
+}

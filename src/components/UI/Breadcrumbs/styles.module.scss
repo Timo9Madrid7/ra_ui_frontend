@@ -1,0 +1,37 @@
+.breadcrumbs-container {
+  margin-left: 50px;
+  display: flex;
+  align-items: center;
+
+  button {
+    margin: 0px 10px;
+  }
+  .items {
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    color: black;
+    font-size: 13px;
+
+    a:hover {
+      color: #5c2093;
+      text-decoration: underline;
+    }
+
+    .icon {
+      font-size: 13px;
+      line-height: 1;
+      padding: 0 2px;
+      vertical-align: middle;
+    }
+
+    .active {
+      font-weight: 500;
+      color: #9b3fba;
+    }
+
+    svg {
+      font-size: large;
+    }
+  }
+}

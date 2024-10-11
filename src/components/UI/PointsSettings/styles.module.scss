@@ -1,0 +1,233 @@
+.source_receiver_settings {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .container {
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+    max-height: 150px;
+    flex-direction: column;
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 10px 0 10px;
+
+      .title {
+        display: flex;
+        align-items: center;
+        font-size: 13px;
+
+        .toggle {
+          height: 15px;
+          width: 15px;
+          margin: 5px;
+        }
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .no_content {
+      padding: 12px 20px 12px 35px;
+      font-size: 12px;
+    }
+
+    .content {
+      padding-bottom: 4px;
+      overflow: auto;
+      height: 100%;
+
+      .row {
+        font-size: 13px;
+        position: relative;
+        padding: 8px 0 8px 22px;
+        cursor: pointer;
+        border-radius: 4px;
+        overflow: hidden;
+        transition: 0.3s background;
+        min-height: 75px;
+
+        &:hover {
+          background-color: #dbe3e0;
+        }
+
+        &.selected {
+          background-color: #dcf6f2;
+        }
+
+        &.disabled {
+          pointer-events: none !important;
+          user-select: none !important;
+        }
+
+        .row_title {
+          padding: 0 30px;
+          font-size: 12px;
+        }
+
+        .row_content {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          padding-right: 20px;
+
+          .inputs {
+            display: flex;
+            gap: 8px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.receivers_container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0px;
+}
+
+.receivers_container__content {
+  -webkit-animation: _fadeInFromNone_8nllj_1 0.4s;
+  animation: _fadeInFromNone_8nllj_1 0.4s;
+  overflow: auto;
+  height: 100%;
+}
+
+.receivers_container__contentdisabled {
+  pointer-events: initial !important;
+  user-select: initial !important;
+}
+
+.receivers_container .receivers__toggle_button {
+  position: absolute;
+  top: 16px;
+  height: 16px;
+  width: 16px;
+  padding: 4px;
+  margin: 3px;
+  pointer-events: initial !important;
+  user-select: initial !important;
+}
+
+.receivers_container .receivers_tabs {
+  padding: 2px 0 10px 22px;
+}
+
+.receivers_container .receivers_tab {
+  text-transform: capitalize;
+  padding: 0 16px 0 0;
+  margin-right: 16px;
+  color: black;
+  font-size: 11px;
+  line-height: 12px;
+  letter-spacing: 0.02em;
+  pointer-events: initial !important;
+  user-select: initial !important;
+}
+
+.receivers_container .add_receivers {
+  width: 50px;
+  position: absolute;
+  top: 12px;
+  right: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.receivers_container .no_receivers__message {
+  padding: 8px 0 8px 22px;
+  color: black;
+  font-size: 10px;
+}
+
+
+.no_sources__message {
+  padding: 10px 0 10px 22px;
+  color: black;
+  font-size: 10px;
+}
+
+
+.label-container {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  width: fit-content;
+}
+
+.label-container .edit-label-icon {
+  visibility: hidden;
+  padding: 4px 20px;
+  margin-left: -20px;
+  transition: 0.1s background;
+}
+
+.label-container .edit-label-icon svg path {
+  fill: #999;
+  transition: 0.1s fill;
+}
+
+.label-container:hover .edit-label-icon {
+  visibility: visible !important;
+}
+
+
+.label-container .label-input {
+  color: inherit;
+  background: rgba(32, 32, 32, 0.9411764706);
+  height: 17px;
+  line-height: 12px;
+  letter-spacing: 0.04em;
+  overflow: visible;
+  font-size: 11px;
+  padding-left: 5px;
+  margin-left: -5px;
+  margin-top: -1px;
+  font-feature-settings: "cv01" on, "cv02" on, "cv03" on, "cv04" on, "cv09" on,
+  "ss02" on;
+  width: 130px;
+}
+
+.label-container ._label_8nllj_177 {
+  line-height: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+
+.grid-receiver-extras {
+  height: 100%;
+  display: flex;
+  position: absolute;
+  top: -5px;
+  right: 8px;
+}
+
+.grid-receiver-extras .show-visibility {
+  visibility: visible !important;
+}
+
+.grid-receiver-extras .hide-delete {
+  visibility: hidden;
+}
+
+
+.small-text {
+  padding: 8px 22px;
+  color: #dadadacc;
+  font-size: 10px;
+}

@@ -1,0 +1,44 @@
+.confirmation_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin: 0 0 10px 0;
+  line-height: 1.5;
+
+  p strong {
+    color: red;
+  }
+}
+
+.suggestions {
+  padding: 15px 0;
+
+  .list {
+    gap: 5px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    .list_item {
+      gap: 10px;
+      display: flex;
+      margin-left: 30px;
+      align-items: center;
+      justify-content: flex-start;
+      line-height: 1.7;
+
+      .highlight {
+        background-color: #fff7d2;
+        padding: 3px;
+        border-radius: 5px;
+      }
+    }
+  }
+}
+
+.note {
+  font-style: italic;
+  color: #949191;
+}

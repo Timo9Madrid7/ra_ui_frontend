@@ -1,0 +1,24 @@
+.container {
+  position: relative;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #b3cdb8;
+
+
+  .panels {
+    flex: 1 1 0;
+    overflow: auto;
+    padding: 10px 0px;
+
+    .panel {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
+
+.running {
+  background-color: #cad7cd;
+}
