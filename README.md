@@ -3,7 +3,9 @@
 1. install node on your machine (https://nodejs.org/en)
 2. run `npm install`
 3. setup you `.env` on the root directory next to `src`.
-4. go to http://localhost:5173/
+4. open your terminal and change the directory to the project path.
+5. run app using `vite` command
+6. go to http://localhost:5173/
 
 Note: these two .env key values must be added before running the application. (copy & paste)
 
