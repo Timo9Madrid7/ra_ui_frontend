@@ -2,7 +2,7 @@ import {FC} from 'react';
 
 import {
     DefaultButton,
-    PrimaryButton,
+    DeleteButton,
 } from '@/components';
 
 import {Dialog} from '@/components'
@@ -56,7 +56,7 @@ export const ConfirmationDialog: FC<props> = (
                         icon={<ClearRoundedIcon/>}
                     />
                 </div>
-                <PrimaryButton
+                <DeleteButton
                     label={`${confirmLabel ? confirmLabel : 'Confirm'}`}
                     onClick={onConfirm}
                     sx={{width: 135}}

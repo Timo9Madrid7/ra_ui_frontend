@@ -71,7 +71,7 @@ export const raTheme = createTheme({
                 styleOverrides: {
                     root: {
                         padding: 0,
-                        backgroundColor: colors.raGreenLike,
+                        backgroundColor: colors.primary,
                         letterSpacing: '0.05em',
                         borderRadius: 0,
                     },
@@ -81,22 +81,22 @@ export const raTheme = createTheme({
             MuiMenuItem: {
                 styleOverrides: {
                     root: {
-                        backgroundColor: colors.raGreenLike,
+                        backgroundColor: colors.primary,
                         color: "black",
                         fontWeight: 500,
                         padding: 10,
                         fontSize: '13px',
                         letterSpacing: '0.05em',
                         '&:hover': {
-                            backgroundColor: colors.raGreenLikeHover,
+                            backgroundColor: colors.primaryHover,
                             transition: '0.2s background, 0.25s color, 0.15s border-color, 0.5s margin, 0.4s opacity',
 
                         },
                         '&.Mui-selected': {
                             fontWeight: 'bold',
-                            backgroundColor: '#ececae',
+                            backgroundColor: colors.primarySelected,
                             '&:hover': {
-                                backgroundColor: colors.raGreenLikeHover,
+                                backgroundColor: colors.primaryHover,
                             }
                         },
                     },

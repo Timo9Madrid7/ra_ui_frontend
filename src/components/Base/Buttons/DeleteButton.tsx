@@ -4,18 +4,18 @@ import {styled} from '@mui/system';
 import colors from '@/theme/colors.module.scss';
 import {DefaultBase, ButtonProps} from "./DefaultButton.tsx";
 
-const PrimaryBase = styled(DefaultBase)`
-    color: ${colors.raGreen};
-    border: 1px solid ${colors.raGreen};
+const DeleteBase = styled(DefaultBase)`
+    color: ${colors.raRed};
+    border: 1px solid ${colors.raRed};
     padding: 18px 10px;
     letter-spacing: 0.05em;
 
     &:hover {
-        background-color: ${colors.raGreen};
+        background-color: ${colors.raRed};
     }
 `;
 
-export const PrimaryButton: FC<ButtonProps> = (
+export const DeleteButton: FC<ButtonProps> = (
     {
         sx,
         icon,
@@ -25,12 +25,12 @@ export const PrimaryButton: FC<ButtonProps> = (
         ...props
     }) => (
     // @ts-expect-error : I know!
-    <PrimaryBase disabled={disabled} onClick={onClick} sx={sx} {...props} >
+    <DeleteBase disabled={disabled} onClick={onClick} sx={sx} {...props} >
         {icon && (
             <Box component="div" sx={{display: 'flex', marginRight: '10px'}}>
                 {icon}
             </Box>
         )}
         <span>{label}</span>
-    </PrimaryBase>
+    </DeleteBase>
 );

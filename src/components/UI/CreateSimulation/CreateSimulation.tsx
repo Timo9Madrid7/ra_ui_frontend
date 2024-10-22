@@ -2,7 +2,7 @@ import React, {
     useEffect,
     useState
 } from 'react';
-import toast from 'react-hot-toast';
+import toast from 'react-hot-toast'; 
 import {useSearchParams} from 'react-router-dom';
 
 /**

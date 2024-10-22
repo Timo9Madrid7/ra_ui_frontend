@@ -52,7 +52,7 @@ export const DG_TEXT: string = 'The Discontinuous Galerkin method (DG) is a ' +
     'characterized by using discontinuous polynomial spaces for the solution ' +
     'and test functions, allowing for high flexibility and local conservation properties.'
 
-export const DE_TEXT: string = 'The Diffusion Equation method (DE) is a mathematical ' +
+export const DE_TEXT: string = 'The Diffusion Equation method (DE) is a mathematical method' +
     ' for modeling the diffusion process, describing how substances spread in a medium ' +
     'over time, often applied in heat transfer, fluid dynamics, and material science.'
 
