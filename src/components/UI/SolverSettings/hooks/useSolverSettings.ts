@@ -2,6 +2,8 @@ import { useSimulationContext } from '@/context/SimulationContext';
 
 import { useUpdateSolverSettings } from './useUpdateSolverSettings';
 
+import {PresetEnum} from '@/enums';
+
 export const useSolverSettings = () => {
 
   const {
@@ -69,9 +71,19 @@ export const useSolverSettings = () => {
     }
   };
 
+  const saveSettingsPreset = (settingsPreset: PresetEnum) => {
+    if (selectedSimulation) {
+      const newSim = {
+        ...selectedSimulation,
+        settingsPreset: settingsPreset,
+      };
+      updateSolverSettings(newSim);
+    }
+  };
   return {
     saveImpulseResponseLength,
     saveEnergyDecayThreshold,
     saveTaskType,
+    saveSettingsPreset,
   };
 };

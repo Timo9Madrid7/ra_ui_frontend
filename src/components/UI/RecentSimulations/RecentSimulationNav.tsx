@@ -121,7 +121,7 @@ export const RecentSimulationNav = () => {
                                 toast.success(
                                     <Link
                                         to={`/results?modelId=${simRunStatus.simulation.modelId}&simulationId=${simRunStatus.simulation.id}`}>
-                                        <p>{`Simulation: ${simRunStatus.simulation.name}} completed! \n Click to see the results!`}</p>
+                                        <p>{`Simulation: ${simRunStatus.simulation.name} completed! \n Click to see the results!`}</p>
                                     </Link>
                                 );
                             }

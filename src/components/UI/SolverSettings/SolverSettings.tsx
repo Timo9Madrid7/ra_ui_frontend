@@ -20,7 +20,7 @@ import {
 /**
  * Types, Enums, Constants
  * */
-import {Simulation} from '@/types';
+import {Simulation, Status} from '@/types';
 import {PresetEnum, MethodEnum} from "@/enums";
 import {DE_TEXT, DG_TEXT} from "@/constants";
 
@@ -45,13 +45,12 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
         selectedSimulation.settingsPreset === null ? PresetEnum.Default : selectedSimulation.settingsPreset
     );
 
+    // Run just once after application is loaded
     useEffect(() => {
         setPreset(
             selectedSimulation.settingsPreset === null ? PresetEnum.Default : selectedSimulation.settingsPreset
         )
     }, []);
-
-    const {dispatch: editorDispatch} = useEditorContext();
 
     const {dgSettings} = selectedSimulation.solverSettings;
 
@@ -66,13 +65,18 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
         saveImpulseResponseLength,
         saveEnergyDecayThreshold,
         saveTaskType,
+        saveSettingsPreset,
     } = useSolverSettings();
 
+    // Save the previous state
     const [prevPresetType, setPrevPresetType] = useState(preset);
+    const [prevTaskType, setPrevTaskType] = useState(taskType);
+    const [prevAutoStop, setPrevAutoStop] = useState(autoStop);
 
     useEffect(() => {
         if (preset !== prevPresetType) {
             saveAndUpdate();
+
             // the default of all presets should be Autostop is ON
             setAutoStop(true);
         }
@@ -80,14 +84,12 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
 
     const saveAndUpdate = async () => {
 
-        let taskType = preset === PresetEnum.Survey ? MethodEnum.DE : MethodEnum.BOTH;
+        let taskType = preset === PresetEnum.Advanced ? selectedSimulation.taskType : MethodEnum.BOTH;
         const energyDecayThreshold =
             preset !== PresetEnum.Advanced ? 35 : dgSettings.energyDecayThreshold;
 
-
         setTaskType(taskType);
 
-        setPrevPresetType(preset);
         setEnergyDecayThreshold(energyDecayThreshold);
         // Save new settings
         let updatedSimulation = {
@@ -112,25 +114,60 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
         await updateSolverSettings(updatedSimulation);
     };
 
-    const handleTaskTypeChange = (taskType: string) => {
-        setTaskType(taskType);
-        saveTaskType(taskType);
-        editorDispatch({
-            type: EditorActionType.SET_TASK_TYPE,
-            taskType,
-        });
-    };
+    const triggerSetTaskType = (taskTypeIn: string) =>
+    {
+        setPrevTaskType (taskType);
+        setTaskType (taskTypeIn);
 
-    const handleAutoStopChange = (type: string) => {
-        if (type === 'edt') {
-            setAutoStop(true);
+        saveTaskType(taskTypeIn);
+
+        if (selectedSimulation.status == Status.Completed)
+        {
+            // In the next UI frame, set the radio button back 
+            setTimeout(() => {
+                setTaskType(prevTaskType);
+            });
+        }
+
+    }
+
+    const triggerSetPreset = (presetIn: PresetEnum) => {
+        setPrevPresetType (preset);
+        setPreset (presetIn);
+
+        saveSettingsPreset(presetIn);
+
+        if (selectedSimulation.status == Status.Completed)
+        {
+            // In the next UI frame, set the radio button back 
+            setTimeout(() => {
+                setPreset(prevPresetType);
+            });
+        }
+    }
+
+    const triggerSetAutoStop = (type: string) => {
+        setPrevAutoStop (autoStop);
+        if (type === 'edt')
+        {
             setEnergyDecayThreshold(35);
             saveEnergyDecayThreshold(35);
-        } else if (type === 'irl') {
+            setAutoStop(true);
+        } else {
             setAutoStop(false);
             setEnergyDecayThreshold(null);
             saveEnergyDecayThreshold(null);
         }
+
+        if (selectedSimulation.status == Status.Completed)
+        {
+            // In the next UI frame, set the radio button back 
+            setTimeout(() => {
+                setAutoStop(prevAutoStop);
+                setEnergyDecayThreshold(prevAutoStop ? 35 : null);
+            });
+        }
+    
     };
 
     return (
@@ -146,13 +183,13 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                         value={PresetEnum.Default}
                         disabled={false}
                         // @ts-expect-error:there is always value
-                        onClick={(e) => setPreset(e.target.value)}
+                        onChange={(e) => triggerSetPreset(e.target.value)}
                         label="Default"/>
                     <FormControlLabel
                         value={PresetEnum.Advanced}
                         control={<Radio size={'small'}/>}
                         // @ts-expect-error:there is always value
-                        onClick={(e) => setPreset(e.target.value)}
+                        onChange={(e) => triggerSetPreset(e.target.value)}
                         label="Advanced"/>
                 </RadioGroup>
             </FormControl>
@@ -173,7 +210,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                                     <RadioGroup
                                         value={autoStop ? 'edt' : 'irl'}
                                         name="row-radio-buttons-group"
-                                        onChange={(e) => handleAutoStopChange(e.target.value)}
+                                        onChange={(e) => triggerSetAutoStop(e.target.value)}
                                     >
                                         <FormControlLabel
                                             control={<Radio size={'small'}/>}
@@ -236,7 +273,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                                 <RadioGroup
                                     value={taskType}
                                     name="method-selector"
-                                    onChange={(e) => handleTaskTypeChange(e.target.value)}
+                                    onChange = {(e) => triggerSetTaskType(e.target.value)}
                                 >
                                     <FormControlLabel
                                         control={<Radio size={'small'}/>}

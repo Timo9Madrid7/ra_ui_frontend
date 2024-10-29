@@ -51,7 +51,7 @@ export const useGetSimulationRunStatuses = (maxNumberOfResults?: number, enabled
             }
 
             if (inProgress) {
-                refetchInterval = 10000;
+                refetchInterval = 500;
             } else {
                 refetchInterval = 0;
             }

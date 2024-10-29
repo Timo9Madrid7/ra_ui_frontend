@@ -52,7 +52,7 @@ export const SimulationRunDialog: FC<SimulationRunDialogProps> = (
     const {data: simulationRunStatus} = useGetSimulationRunStatusById(
         simulationRunDetails?.id || '',
         simulationRunDetails && simulationInProgress(simulationRunDetails?.status) || false,
-        3000
+        500
     );
 
     useEffect(() => {
