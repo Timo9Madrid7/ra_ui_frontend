@@ -2,11 +2,12 @@ import {CircularProgress, DialogActions, DialogContent, LinearProgress,} from '@
 import {FC, useEffect, useRef, useState} from 'react';
 import toast from 'react-hot-toast';
 
-import {ConfirmationDialog, Dialog, startMeshTask, PrimaryButton, SuccessButton} from "@/components";
+import {ConfirmationDialog, Dialog, startMeshTask, PrimaryButton, SuccessButton, DeleteButton} from "@/components";
 import {ActionType, useSimulationContext} from '@/context/SimulationContext';
 import {useGetSimulationById} from '@/hooks';
 import {
     useStartSolveTask,
+    useCancelSolveTaskWithId,
     useGetSimulationRunStatusById
 } from './hooks'
 
@@ -18,6 +19,11 @@ import dayjs from "dayjs";
 import classes from './classes.module.scss'
 import {EMPTY_SIMULATION_RUN, SIMULATION_STATUS_1_In_PENDING} from "@/constants";
 
+
+import {getSimulationStatusString} from '../RecentSimulations/RecentSimulationStatusDisplay'
+import { Console } from 'console';
+import { CANCELLED } from 'dns';
+import test from 'node:test';
 
 type SimulationRunDialogProps = {
     selectedSimulation: Simulation;
@@ -43,6 +49,11 @@ export const SimulationRunDialog: FC<SimulationRunDialogProps> = (
 
     const [confirmOverwrite, setConfirmOverwrite] = useState(false);
     const [confirmOverwriteDialog, setConfirmOverwriteDialog] = useState(false);
+    const [cancelSimulationDialog, setCancelSimulationDialog] = useState(false);
+
+    const [testSimulationRun, setTestSimulationRun] = useState<SimulationRun | null>(null);
+
+
     const [send, setSend] = useState(false);
     const initialRender = useRef(true);
     const simulationInProgress = (status: Status) => {
@@ -66,6 +77,7 @@ export const SimulationRunDialog: FC<SimulationRunDialogProps> = (
 
     useEffect(() => {
         if (simulationRunStatus) {
+            console.log (simulationRunStatus);
             setSimulationRunDetails(simulationRunStatus);
             if (!simulationInProgress(simulationRunStatus.status)) {
                 refetchSimulation().then((response) => {
@@ -87,6 +99,7 @@ export const SimulationRunDialog: FC<SimulationRunDialogProps> = (
 
 
     const {mutate: startSolveTask} = useStartSolveTask();
+    const {mutate: cancelSolveTaskWithId} = useCancelSolveTaskWithId();
 
     const createNewMesh = async (modelId: string) => {
         setSend(true)
@@ -123,6 +136,7 @@ export const SimulationRunDialog: FC<SimulationRunDialogProps> = (
         }
     }, [newSimulationObject]);
 
+
     const handleStartSimulation = () => {
         // @ts-expect-error: minimum required attributes
         setSimulationRunDetails(EMPTY_SIMULATION_RUN);
@@ -152,6 +166,72 @@ export const SimulationRunDialog: FC<SimulationRunDialogProps> = (
             }
         );
     };
+    
+    const handleCancelSimulation = () => {
+
+        cancelSolveTaskWithId({ simulationId: selectedSimulation.id }, 
+            {
+                onSuccess: (simulationRun) => {
+                    if (simulationRun)
+                    {
+                        if (simulationInProgress(selectedSimulation.status)) {
+                            refetchSimulation().then((response) => {
+                                dispatch({
+                                    type: ActionType.UPDATE_AVAILABLE_SIMULATIONS,
+                                    simulation: response.data
+                                })
+                                if (response.data?.simulationRun)
+                                    dispatch({
+                                        type: ActionType.SET_LAST_SIMULATION_RUN,
+                                        simulationRun: response.data?.simulationRun,
+                                    });
+                            })
+                        }
+                    }
+                },
+                onError: () => toast.error('Error cancelling the simulation!'),
+
+            }
+        );
+        console.log("Should cancel simulation");
+
+    }
+
+    // const handleCancelSimulation = () => {
+
+    //     cancelSolveTaskWithRunId(
+    //         { 
+    //             simulationRunId: selectedSimulation.simulationRunId
+    //         }, 
+    //         {
+    //             onSuccess: (simulationRun) => {
+    //                 if (simulationRun)
+    //                 {
+    //                     if (simulationInProgress(selectedSimulation.status)) {
+    //                         refetchSimulation().then((response) => {
+    //                             dispatch({
+    //                                 type: ActionType.UPDATE_AVAILABLE_SIMULATIONS,
+    //                                 simulation: response.data
+    //                             })
+    //                             if (response.data?.simulationRun)
+    //                                 dispatch({
+    //                                     type: ActionType.SET_LAST_SIMULATION_RUN,
+    //                                     simulationRun: response.data?.simulationRun,
+    //                                 });
+    //                         })
+    //                     }
+    //                 }
+    //             },
+    //             onError: () => toast.error('Error cancelling the simulation!'),
+
+    //         }
+    //     );
+    //     console.log("Should cancel simulation");
+
+    // }
+
+
+
 
     return (
         <>
@@ -188,7 +268,7 @@ export const SimulationRunDialog: FC<SimulationRunDialogProps> = (
                     ) : (
                         <div className={classes.running_container}>
                             <div className={classes.running_header}>
-                                <p>Status: <strong>{simulationRunDetails.status}</strong></p>
+                                <p>Status: <strong>{getSimulationStatusString(simulationRunDetails.status)}</strong></p>
                                 <p>Progress: <strong>{simulationRunDetails.percentage}</strong> %</p>
                             </div>
                             <div className={classes.progress_container}>
@@ -232,6 +312,13 @@ export const SimulationRunDialog: FC<SimulationRunDialogProps> = (
                             onClick={onClose}
                         />
                     )}
+                    {simulationInProgress(simulationRunDetails?.status) && (
+                        <DeleteButton
+                            className={classes.start_button}
+                            label="Cancel simulation"
+                            onClick={() => setCancelSimulationDialog(true)}
+                        />
+                    )}
                 </DialogActions>
             </Dialog>
 
@@ -251,6 +338,23 @@ export const SimulationRunDialog: FC<SimulationRunDialogProps> = (
                     onCancel={() => setConfirmOverwriteDialog(false)}
                 />
             )}
+
+            {cancelSimulationDialog && (
+                <ConfirmationDialog
+                    title="Confirm cancel simulation"
+                    message={() => (
+                        <> Are you sure you want to cancel this simulation <br/>
+                            and lose the results being generated?
+                        </>
+                    )}
+                    onConfirm={() => {
+                        handleCancelSimulation();
+                        setCancelSimulationDialog(false);
+                    }}
+                    onCancel={() => setCancelSimulationDialog(false)}
+                />
+            )}
+
         </>
     );
 };

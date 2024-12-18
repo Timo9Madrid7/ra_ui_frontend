@@ -5,6 +5,7 @@ import { Simulation } from '@/types';
 
 export const getSimulationById = async (simulationId: string): Promise<Simulation> => {
   const { data } = await axios.get(`simulations/${simulationId}`);
+  console.log ("Simulation with id " + data.id + " has status " + data.status);
 
   return data;
 };

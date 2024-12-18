@@ -11,7 +11,7 @@ const getSimulationRunStatusById = async (simulationRunId: string) => {
 
     return data;
 };
-
+    
 export const useGetSimulationRunStatusById = (
     simulationRunId: string,
     enabled = true,

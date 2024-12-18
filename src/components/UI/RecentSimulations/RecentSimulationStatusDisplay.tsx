@@ -10,6 +10,23 @@ import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined
 import classes from './styles.module.scss';
 import {Status} from "@/types";
 
+export const getSimulationStatusString = (status: Status) =>
+{
+    switch (status)
+    {
+        case Status.InProgress: {
+            return "In Progress";
+        }
+        case Status.ProcessingResults: {
+            return "Processing Results";
+        }
+        default: {
+            return status;
+        }
+    }
+}
+    
+    
 interface RecentSimlationStatusDisplayProps {
     taskStatus?: any;
     simulationStatus?: string;
@@ -54,7 +71,7 @@ export const RecentSimulationStatusDisplay = (
                     <>
                         {parent !== 'Nav' && <AutoModeOutlinedIcon/>}
                         <span className={classes.status_percentage}>{`Progress: ${percentage}%`}</span>
-                        <strong className={classes.status_percentage}>{`Status: ${simulationStatus}`}</strong>
+                        <strong className={classes.status_percentage}>{`Status: ${getSimulationStatusString(simulationStatus)}`}</strong>
 
                     </>
                 )}
