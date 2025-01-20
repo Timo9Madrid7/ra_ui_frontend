@@ -42,10 +42,15 @@ export const Sidebar = (
                 <>
                     <div className={classes.welcome}>
                         <Divider style={{whiteSpace: 'normal', fontSize: 12}}>
-                            Room Acoustics
+                            CHORAS
                         </Divider>
                         <h5>
-                            Welcome to Room Acoustics Software - Open Source and Free!
+                            <center>
+                            Welcome to the <br/><br/>
+                            Community Hub for Open-source Room Acoustics Software (CHORAS)<br/>
+                            <br/>
+                            - Open Source and Free! -
+                            </center>
                         </h5>
                         <div className={classes.message}>
                             To import your room geometry use <span
