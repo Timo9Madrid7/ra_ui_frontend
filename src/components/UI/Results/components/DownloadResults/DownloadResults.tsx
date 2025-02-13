@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from '@/client';
+import toast from 'react-hot-toast';
 
 import { useState } from 'react';
 
@@ -22,6 +23,7 @@ export const DownloadResults = ({
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -34,8 +36,12 @@ export const DownloadResults = ({
   };
 
   const getExportSolveResult = async (simulationId: string) => {
-    const zipfile = await axios.get(`/exports/${simulationId}`, {responseType: 'blob',});
-    return zipfile;
+    try {
+      const zipfile = await axios.get(`/exports/${simulationId}`, {responseType: 'blob',});
+      return zipfile;
+    } catch (error) {
+      return error;
+    }
   };
 
   const handleDownloadSource = async (e: React.MouseEvent) => {
@@ -46,6 +52,13 @@ export const DownloadResults = ({
       handleClose();
 
       const response = await getExportSolveResult(simulationId);
+
+      if (response instanceof Error) {
+        toast.error(`Error downloading the file`);
+
+        setIsLoading(false);
+        return;
+      }
       handleDownload(response);
 
       setIsLoading(false);
