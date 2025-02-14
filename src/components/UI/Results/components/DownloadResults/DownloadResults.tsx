@@ -1,4 +1,7 @@
-import axios from '@/client';
+import axios, { AxiosResponse } from '@/client';
+import toast from 'react-hot-toast';
+import { saveAs } from 'file-saver';
+
 
 import { useState } from 'react';
 
@@ -9,7 +12,6 @@ import FolderZipOutlinedIcon from '@mui/icons-material/FolderZipOutlined';
 
 /** Styles */
 import classes from './styles.module.scss';
-import toast from 'react-hot-toast';
 import { Simulation } from '@/types';
 
 export const DownloadResults = ({
@@ -23,6 +25,7 @@ export const DownloadResults = ({
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isLoading, setIsLoading] = useState(false);
+
   const open = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -34,51 +37,39 @@ export const DownloadResults = ({
     setAnchorEl(null);
   };
 
-  const exportSimulationResult = async (simulationId: string) => {
-    const { data } = await axios.get(`/api/ResultExport/ExportSimulationResult?simulationId=${simulationId}`);
-    return data;
-  };
-  const getExportSolveResult = async (solveResultId: string) => {
-    const { data } = await axios.get(`/api/ResultExport/ExportSolveResult?solveResultId=${solveResultId}`);
-    return data;
-  };
-
-  const handleDownloadParameters = async (e: React.MouseEvent) => {
-    e.stopPropagation();
-
-    setIsLoading(true);
-    handleClose();
-    const downloadUrl = await exportSimulationResult(simulationId);
-    handleDownload(downloadUrl);
-    setIsLoading(false);
+  const getExportSolveResult = async (simulationId: string) => {
+    try {
+      const zipfile = await axios.get(`/exports/${simulationId}`, {responseType: 'blob',});
+      return zipfile;
+    } catch (error) {
+      return error;
+    }
   };
 
   const handleDownloadSource = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
-    if (solveResultId) {
+    if (simulationId) {
       setIsLoading(true);
       handleClose();
 
-      const downloadUrl = await getExportSolveResult(solveResultId);
-      handleDownload(downloadUrl);
+      const response = await getExportSolveResult(simulationId);
+
+      if (response instanceof Error) {
+        toast.error(`Error downloading the file`);
+
+        setIsLoading(false);
+        return;
+      }
+      handleDownload(response);
 
       setIsLoading(false);
     }
   };
 
-  const handleDownload = (downloadUrl: string) => {
-    const anchorElement = document.createElement('a');
-    if (downloadUrl) {
-      anchorElement.href = downloadUrl;
-      document.body.appendChild(anchorElement);
-      anchorElement.click();
-      document.body.removeChild(anchorElement);
-    } else {
-      if (selectedSimulation) {
-        toast.error(`No file found for ${selectedSimulation.name}`);
-      }
-    }
+  const handleDownload = (response: AxiosResponse) => {
+    const blob = new Blob([response.data], { type: 'application/zip' });
+    saveAs(blob, 'SimulationResult.zip');
   };
 
   return (
@@ -89,7 +80,7 @@ export const DownloadResults = ({
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
-        disabled={solveResultId === undefined}
+        // disabled={solveResultId === undefined}
         className={classes.download_button}>
         {isLoading ? (
           <CircularProgress size={16} />
@@ -113,8 +104,11 @@ export const DownloadResults = ({
         {/*  <span>Parameters values (.xlsx)</span>*/}
         {/*</MenuItem>*/}
         <MenuItem onClick={handleDownloadSource} className={classes.menu_item}>
-          <FolderZipOutlinedIcon /> <span>IRs for selected source (.zip)</span>
+          <FolderZipOutlinedIcon /> <span>Simulation Result(.zip)</span>
         </MenuItem>
+        {/* <MenuItem onClick={handleDownloadSource} className={classes.menu_item}> */}
+          {/* <FolderZipOutlinedIcon /> <span>IRs for selected source (.zip)</span> */}
+        {/* </MenuItem> */}
       </Menu>
     </>
   );
