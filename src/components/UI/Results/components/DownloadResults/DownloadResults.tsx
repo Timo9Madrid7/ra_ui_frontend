@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from '@/client';
 import toast from 'react-hot-toast';
+import { saveAs } from 'file-saver';
+
 
 import { useState } from 'react';
 
@@ -65,15 +67,9 @@ export const DownloadResults = ({
     }
   };
 
-  const handleDownload = (response: AxiosResponse<Blob>) => {
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const anchorElement = document.createElement('a');
-    anchorElement.href = url;
-    anchorElement.setAttribute('download', 'SimulationResult.zip'); // Set the file name
-    document.body.appendChild(anchorElement);
-    anchorElement.click();
-    document.body.removeChild(anchorElement);
-    window.URL.revokeObjectURL(url); // Clean up the URL object
+  const handleDownload = (response: AxiosResponse) => {
+    const blob = new Blob([response.data], { type: 'application/zip' });
+    saveAs(blob, 'SimulationResult.zip');
   };
 
   return (
