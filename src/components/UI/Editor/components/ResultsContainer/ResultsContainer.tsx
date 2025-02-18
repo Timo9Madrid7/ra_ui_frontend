@@ -2,13 +2,14 @@ import {FC, useEffect, useState} from 'react';
 
 /** Components */
 import {
+    Dialog,
     ParameterPlot,
     PrimaryButton,
     ResponsePlot
 } from '@/components';
 
 import {ResultsComparisonsPanel} from './ResultsComparisonsPanel'
-import {Tabs} from '@mui/material';
+import {DialogContent, Tabs} from '@mui/material';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 /** Hooks */
 import InsightsIcon from '@mui/icons-material/Insights';
@@ -17,7 +18,9 @@ import Tab from "@mui/material/Tab";
 
 
 import {ModelInformation, Simulation} from "@/types";
-import { MusicVideo } from '@mui/icons-material';
+import { Download, MusicVideo } from '@mui/icons-material';
+
+
 
 type ResultsContainerProps = {
     showResults: boolean;
@@ -36,7 +39,19 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
     const [selectedResultTab, setSelectedResultTab] = useState<number>(0);
 
     const [active, setActive] = useState(false);
+    
+    // SBG 
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
 
+    // Function to open the pop-up
+    const handleOpenPopup = () => {
+        setIsPopupOpen(true);
+    };
+
+    // Function to close the pop-up (pass to the popup component)
+    const handleClosePopup = () => {
+        setIsPopupOpen(false);
+    };
 
     useEffect(() => {
         setActive(true);
@@ -44,9 +59,17 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
 
     return (
         <div className={`${styles.results_container}  ${active ? styles.active : ''}`}>
+            {/* for download button  */}
             <PrimaryButton className={styles.download_btn}
                             label="Download"
-                            onClick={function(){console.log("hello")}} />
+                            icon={<Download/>}
+                            onClick={handleOpenPopup} />                            
+
+            {isPopupOpen && <Dialog fullWidth
+            maxWidth={'sm'}
+            open={true}
+            title={'Select your preferences'} onClose={handleClosePopup}/>}
+
             <Tabs
                 value={selectedResultTab}
                 variant="fullWidth"
