@@ -16,6 +16,8 @@ import Tab from "@mui/material/Tab";
 
 
 import {ModelInformation, Simulation} from "@/types";
+import { MusicNote } from '@mui/icons-material';
+import { AuralizationPlot } from '@/components/UI/Results/components/Plots/AuralizationPlot/AuralizationPlot';
 
 type ResultsContainerProps = {
     showResults: boolean;
@@ -53,6 +55,7 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
             >
                 <Tab icon={<BarChartOutlinedIcon/>} label="Parameters"/>
                 <Tab icon={<InsightsIcon/>} label="Plots"/>
+                <Tab icon={<MusicNote />} label="Auralization"/>
             </Tabs>
 
             <ParameterPlot
@@ -63,6 +66,11 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
             <ResponsePlot
                 value={selectedResultTab}
                 index={1}
+            />
+
+            <AuralizationPlot
+                value={selectedResultTab}
+                index={2}
             />
 
             {showResults && modelInformation && selectedSimulation && (
