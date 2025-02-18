@@ -9,8 +9,12 @@ import {
 } from '@/components';
 
 import {ResultsComparisonsPanel} from './ResultsComparisonsPanel'
-import {DialogContent, Tabs} from '@mui/material';
+import {Tabs} from '@mui/material';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
+import { MusicNote } from '@mui/icons-material';
+import { AuralizationPlot } from '@/components/UI/Results/components/Plots/AuralizationPlot/AuralizationPlot';
+import { Download } from '@mui/icons-material';
+
 /** Hooks */
 import InsightsIcon from '@mui/icons-material/Insights';
 import styles from './styles.module.scss';
@@ -18,9 +22,7 @@ import Tab from "@mui/material/Tab";
 
 
 import {ModelInformation, Simulation} from "@/types";
-import { MusicNote } from '@mui/icons-material';
-import { AuralizationPlot } from '@/components/UI/Results/components/Plots/AuralizationPlot/AuralizationPlot';
-import { Download, MusicVideo } from '@mui/icons-material';
+
 
 
 
@@ -69,10 +71,15 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
                 onClick={handleOpenPopup}
             />                      
 
-            {isPopupOpen && <Dialog fullWidth
-            maxWidth={'sm'}
-            open={true}
-            title={'Select your preferences'} onClose={handleClosePopup}/>}
+            {
+                isPopupOpen && <Dialog 
+                    fullWidth
+                    maxWidth={'sm'}
+                    open={true}
+                    title={'Select your preferences'}
+                    onClose={handleClosePopup}
+                />
+            }
 
             <Tabs
                 value={selectedResultTab}

@@ -9,7 +9,7 @@ const getAudios = async () => {
 };
 
 export const useGetAudios = (enabled = true) => {
-  const query = useQuery<AnechoicOption[], boolean>(['anechoic'], () => getAudios(), {
+  const query = useQuery<AnechoicOption[], Error>(['anechoic'], () => getAudios(), {
     enabled: enabled,
     refetchOnWindowFocus: false,
   });
