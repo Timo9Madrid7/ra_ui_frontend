@@ -40,17 +40,17 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
 
     const [active, setActive] = useState(false);
     
-    // SBG 
-    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    // for download button  
+    const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false);
 
     // Function to open the pop-up
-    const handleOpenPopup = () => {
-        setIsPopupOpen(true);
+    const handleOpenPopupDialog = () => {
+        setIsPopupDialogOpen(true);
     };
 
     // Function to close the pop-up (pass to the popup component)
-    const handleClosePopup = () => {
-        setIsPopupOpen(false);
+    const handleClosePopupDialog = () => {
+        setIsPopupDialogOpen(false);
     };
 
     useEffect(() => {
@@ -63,12 +63,12 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
             <PrimaryButton className={styles.download_btn}
                             label="Download"
                             icon={<Download/>}
-                            onClick={handleOpenPopup} />                            
+                            onClick={handleOpenPopupDialog} />                            
 
-            {isPopupOpen && <Dialog fullWidth
+            {isPopupDialogOpen && <Dialog fullWidth
             maxWidth={'sm'}
             open={true}
-            title={'Select your preferences'} onClose={handleClosePopup}/>}
+            title={'Select your preferences'} onClose={handleClosePopupDialog}/>}
 
             <Tabs
                 value={selectedResultTab}
