@@ -3,6 +3,7 @@ import {FC, useEffect, useState} from 'react';
 /** Components */
 import {
     ParameterPlot,
+    PrimaryButton,
     ResponsePlot
 } from '@/components';
 
@@ -16,6 +17,7 @@ import Tab from "@mui/material/Tab";
 
 
 import {ModelInformation, Simulation} from "@/types";
+import { MusicVideo } from '@mui/icons-material';
 
 type ResultsContainerProps = {
     showResults: boolean;
@@ -42,7 +44,9 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
 
     return (
         <div className={`${styles.results_container}  ${active ? styles.active : ''}`}>
-
+            <PrimaryButton className={styles.download_btn}
+                            label="Download"
+                            onClick={function(){console.log("hello")}} />
             <Tabs
                 value={selectedResultTab}
                 variant="fullWidth"
@@ -50,9 +54,10 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
                 onChange={(e, value) => setSelectedResultTab(value)}
                 aria-label="icon label tabs example"
 
-            >
+            >                
                 <Tab icon={<BarChartOutlinedIcon/>} label="Parameters"/>
                 <Tab icon={<InsightsIcon/>} label="Plots"/>
+                <Tab icon={<MusicVideo/>} label="Auralization"/>
             </Tabs>
 
             <ParameterPlot
