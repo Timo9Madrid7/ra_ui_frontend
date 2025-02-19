@@ -19,6 +19,7 @@ import Tab from "@mui/material/Tab";
 
 import {ModelInformation, Simulation} from "@/types";
 import { Download, MusicVideo } from '@mui/icons-material';
+import { SelectOptionsPopup } from './SelectOptionsPopup';
 
 
 
@@ -44,14 +45,14 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
     const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false);
 
     // Function to open the pop-up
-    const handleOpenPopupDialog = () => {
-        setIsPopupDialogOpen(true);
-    };
+    // const handleOpenPopupDialog = () => {
+    //     setIsPopupDialogOpen(true);
+    // };
 
-    // Function to close the pop-up (pass to the popup component)
-    const handleClosePopupDialog = () => {
-        setIsPopupDialogOpen(false);
-    };
+    // // Function to close the pop-up (pass to the popup component)
+    // const handleClosePopupDialog = () => {
+    //     setIsPopupDialogOpen(false);
+    // };
 
     useEffect(() => {
         setActive(true);
@@ -60,15 +61,13 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
     return (
         <div className={`${styles.results_container}  ${active ? styles.active : ''}`}>
             {/* for download button  */}
-            <PrimaryButton className={styles.download_btn}
-                            label="Download"
-                            icon={<Download/>}
-                            onClick={handleOpenPopupDialog} />                            
+            <PrimaryButton 
+                    className={styles.download_btn}
+                    label="Download"
+                    icon={<Download/>}
+                    onClick={()=>setIsPopupDialogOpen(true)} />                            
 
-            {isPopupDialogOpen && <Dialog fullWidth
-            maxWidth={'sm'}
-            open={true}
-            title={'Select your preferences'} onClose={handleClosePopupDialog}/>}
+            {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen}/>}
 
             <Tabs
                 value={selectedResultTab}
