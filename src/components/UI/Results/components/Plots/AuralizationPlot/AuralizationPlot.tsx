@@ -13,7 +13,7 @@ import axios from '@/client';
 import { useLocation } from 'react-router-dom';
 
 /** Components */
-import { useGetAudios, useGetAuralizationStatus } from '@/hooks/Auralization';
+import { useGetAudios, useGetAuralizationStatus, useGetImpulseResponseAudio } from '@/hooks/Auralization';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import FolderIcon from '@mui/icons-material/Folder';
 import { SelectAutoComplete } from '@/components/Base/Select/SelectAutoComplete';
@@ -34,10 +34,11 @@ export const AuralizationPlot = ({
     const [auralizationStatus, setAuralizationStatus] = useState<string>('');
     const [auralizationId, setAuralizationId] = useState<number>(0);
     const [wavURL, setWavURL] = useState<string | null>(null);
+    const [impulseURL, setImpulseURL] = useState<string | null>(null);
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
-    const simulationId = queryParams.get('simulationId');
+    const simulationId = queryParams.get('simulationId') || "";
 
     const {
         data: audioOptions,
@@ -45,6 +46,22 @@ export const AuralizationPlot = ({
         error: audioOptionsError,
     } = useGetAudios();
 
+    const {
+        data: impulseResponseAudio,
+        isLoading: isLoadingimpulseResponseAudio,
+        error: impulseResponseAudioError,
+    } = useGetImpulseResponseAudio(simulationId);
+
+    useEffect(() => {
+        if(!isLoadingimpulseResponseAudio && impulseResponseAudio){
+            const blob = new Blob([impulseResponseAudio], {
+                type: 'audio/x-wav',
+            });
+            const url = window.URL.createObjectURL(blob);
+            setImpulseURL(url);
+        }
+    },[isLoadingimpulseResponseAudio]);
+    
     // this useEffect is used to set the selectedAudioOption to the first element of the audioOptions array
     useEffect(() => {
         if (audioOptions && !isLoadingAudioOptions && !audioOptionsError) {
@@ -184,6 +201,9 @@ export const AuralizationPlot = ({
             className={classes.plot_container}
             style={{ display: value === index ? 'block' : 'none' }}
         >
+            <p>
+                
+            </p>
             <List>
                 <h2 className={classes.plot_header}>Auralization</h2>
                 <SelectAutoComplete
