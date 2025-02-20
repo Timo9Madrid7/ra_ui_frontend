@@ -28,63 +28,70 @@ import {
 
 
 
-import {FREQUENCY_OPTIONS, RESULT_PARAMETERS} from "@/constants";
+import {AURALIZATION_OPTIONS, FREQUENCY_OPTIONS, RESULT_PARAMETERS} from "@/constants";
+import { CircleOutlined, CircleRounded, ClearRounded, Done } from '@mui/icons-material';
 
 
 
 export const SelectOptionsPopup = ({isPopupDialogOpen}: { isPopupDialogOpen: (show: boolean) => void }) => {
 
 // parameters 
-    const [checkedParam, setCheckedParam] = useState<boolean[]>(
-        new Array(RESULT_PARAMETERS.length).fill(false)
-      );
+    const [checkedParam, setCheckedParam] = useState<string[]>([]);
     const handleParameterParentChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setCheckedParam(new Array(RESULT_PARAMETERS.length).fill(event.target.checked));
+        setCheckedParam(event.target.checked ? RESULT_PARAMETERS : []);
     };
-    const handleParamChildChange = (index: number) => (
+    const handleParamChildChange = (param: number) => (
         event: ChangeEvent<HTMLInputElement>
         ) => {
-        const updatedChecked = [...checkedParam];
-        updatedChecked[index] = event.target.checked;
-        setCheckedParam(updatedChecked);
+            setCheckedParam(event.target.checked
+                ? [...checkedParam, param]
+                : checkedParam.filter(item => item !== param));
     };
-    const allCheckedParam = checkedParam.every(Boolean);
-    const someCheckedParam = checkedParam.some(Boolean) && !allCheckedParam;
+    const allCheckedParam = checkedParam.length === RESULT_PARAMETERS.length;
+    const someCheckedParam = checkedParam.length > 0 && !allCheckedParam;
 
 // plots 
-    const [checkedPlot, setCheckedPlot] = useState<boolean[]>(
-        new Array(FREQUENCY_OPTIONS.length).fill(false)
-      );
+    const [checkedPlot, setCheckedPlot] = useState<string[]>([]);
     const handlePlotParentChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setCheckedPlot(new Array(FREQUENCY_OPTIONS.length).fill(event.target.checked));
+        setCheckedPlot(event.target.checked ? FREQUENCY_OPTIONS.map(f => f.value) : []);
     };
-    const handlePlotChildChange = (index: number) => (
-        event: ChangeEvent<HTMLInputElement>
-        ) => {
-        const updatedChecked = [...checkedPlot];
-        updatedChecked[index] = event.target.checked;
-        setCheckedPlot(updatedChecked);
+    const handlePlotChildChange = (value: string) => (event: ChangeEvent<HTMLInputElement>) => {
+        setCheckedPlot(event.target.checked
+            ? [...checkedPlot, value]
+            : checkedPlot.filter(item => item !== value));
     };
-    const allCheckedPlot = checkedPlot.every(Boolean);
-    const someCheckedPlot = checkedPlot.some(Boolean) && !allCheckedPlot;
+    const allCheckedPlot = checkedPlot.length === FREQUENCY_OPTIONS.length;
+    const someCheckedPlot = checkedPlot.length > 0 && !allCheckedPlot;
 
 
 //Auralization
-    const [checkedAur, setCheckedAur] = useState<boolean[]>([false, false]);
+    const [checkedAur, setCheckedAur] = useState<string[]>([]);
     const handleParentAurChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCheckedAur([event.target.checked, event.target.checked]);
+        setCheckedAur(event.target.checked ? AURALIZATION_OPTIONS.map(f => f.value) : []);
     };
-    const handleChildAurChange = (index: number) => (
+    const handleChildAurChange = (option: string) => (
         event: React.ChangeEvent<HTMLInputElement>
         ) => {
-        const updatedChecked = [...checkedAur];
-        updatedChecked[index] = event.target.checked;
-        setCheckedAur(updatedChecked);
+        setCheckedAur(event.target.checked
+            ? [...checkedAur, option]
+            : checkedAur.filter(item => item !== option));
     };
 
-    const allCheckedAur = checkedAur.every(Boolean);
-    const someCheckedAur = checkedAur.some(Boolean) && !allCheckedAur;
-    // const [frequencies, setFrequencies] = React.useState<string[]>(['125']);
+    const allCheckedAur = checkedAur.length === AURALIZATION_OPTIONS.length;
+    const someCheckedAur = checkedAur.length > 0 && !allCheckedAur;
+
+    //// submit button
+    // Disable/Enable Button Logic
+    const [isFormValid, setIsFormValid] = useState(false);
+    useEffect(() => {
+        setIsFormValid(checkedParam.length > 0 || checkedPlot.length > 0 || checkedAur.length > 0);
+    }, [checkedParam, checkedPlot, checkedAur]);
+    const handleDownloadFiles= async (e: React.MouseEvent) =>{
+        e.preventDefault();
+        console.log("Selected Parameters:", checkedParam);
+        console.log("Selected Plots:", checkedPlot);
+        console.log("Selected Auralization:", checkedAur);
+    }
 /////////////////////////////////////////////////////////////////////////////////////////
     // console.log(styles);
 ///////////////////////////////////////////////////////////////////////////
@@ -98,8 +105,8 @@ export const SelectOptionsPopup = ({isPopupDialogOpen}: { isPopupDialogOpen: (sh
             <form>
                 <DialogContent>
                     {/* parameters  */}
-                    <FormControlLabel
-                        label="Parameters"                       
+                    <FormControlLabel                                   
+                        label="Parameters :"                       
                         control={
                         <Checkbox
                             checked={allCheckedParam}
@@ -108,13 +115,18 @@ export const SelectOptionsPopup = ({isPopupDialogOpen}: { isPopupDialogOpen: (sh
                         />
                         }
                     />                    
-                    <Box>
-                        {RESULT_PARAMETERS.map((param, index) => (
+                    <Box className={styles.options_show} >
+                        {RESULT_PARAMETERS.map((param) => (
                         <FormControlLabel
                             key={param}
                             label={param}
                             control={
-                            <Checkbox checked={checkedParam[index]} onChange={handleParamChildChange(index)} />
+                                <Checkbox
+                                        icon={<CircleOutlined />}
+                                        checkedIcon = {<CircleRounded/>}
+                                        checked={checkedParam.includes(param)}
+                                        onChange={handleParamChildChange(param)}
+                                    />
                             }
                         />
                         ))}
@@ -122,7 +134,7 @@ export const SelectOptionsPopup = ({isPopupDialogOpen}: { isPopupDialogOpen: (sh
 
                     {/* plots  */}
                     <FormControlLabel
-                        label="Plots"                       
+                        label="Plots :"                       
                         control={
                         <Checkbox
                             checked={allCheckedPlot}
@@ -131,39 +143,46 @@ export const SelectOptionsPopup = ({isPopupDialogOpen}: { isPopupDialogOpen: (sh
                         />
                         }
                     />                    
-                    <Box>
-                    {FREQUENCY_OPTIONS.map((option, index) => (
+                    <Box className={styles.options_show}>
+                    {FREQUENCY_OPTIONS.map((option) => (
                                     <FormControlLabel key={option.value} label={option.label} control={
-                                        <Checkbox checked={checkedPlot[index]} onChange={handlePlotChildChange(index)} />
-                                        }/>
-                                        
+                                        <Checkbox 
+                                            icon={<CircleOutlined />}
+                                            checkedIcon = {<CircleRounded/>}
+                                            checked={checkedPlot.includes(option.value)}
+                                            onChange={handlePlotChildChange(option.value)} />
+                                        }/>                                        
                                 ))}
                     </Box>      
                     {/* auralization  */}
                     <FormControlLabel
-                        label="Auralization"                       
+                        label="Auralization :"                       
                         control={
-                        <Checkbox
+                        <Checkbox                            
                             checked={allCheckedAur}
                             indeterminate={someCheckedAur}
                             onChange={handleParentAurChange}
                         />
                         }
                     />                    
-                    <Box>
+                    <Box className={styles.options_show}>
+                        {AURALIZATION_OPTIONS.map((option) => (
                         <FormControlLabel
-                            label=".WAV"
-                            key = "wav"
-                            control={<Checkbox checked={checkedAur[0]} onChange={handleChildAurChange("wav")} />}
+                            key={option.value}
+                            label={option.label}
+                            control={
+                                <Checkbox
+                                    icon={<CircleOutlined />}
+                                    checkedIcon = {<CircleRounded/>}
+                                    checked={checkedAur.includes(option.value)}
+                                    onChange={handleChildAurChange(option.value)}
+                            />
+                            }
                         />
-                        <FormControlLabel
-                            label="Impulse Response"
-                            key = "ir"
-                            control={<Checkbox checked={checkedAur[1]} onChange={handleChildAurChange("ir")} />}
-                        />
+                        ))}
                     </Box>
                 </DialogContent>
-                {/* <DialogActions>
+                <DialogActions>
                     <div>
                         <DefaultButton
                             label="Cancel"
@@ -173,14 +192,14 @@ export const SelectOptionsPopup = ({isPopupDialogOpen}: { isPopupDialogOpen: (sh
                     </div>
                     <div>
                         <SuccessButton
-                            label="Create"
+                            label="Download"
                             type="submit"
                             icon={<Done/>}
                             disabled={!isFormValid}
-                            onClick={(e) => handleCreateSimulation(e)}
+                            onClick={(e) => handleDownloadFiles(e)}
                         />
                     </div>
-                </DialogActions> */}
+                </DialogActions>
             </form>
         </Dialog>
     );

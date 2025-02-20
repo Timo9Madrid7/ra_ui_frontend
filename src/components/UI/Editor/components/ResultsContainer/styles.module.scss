@@ -23,13 +23,8 @@
     align-self: flex-start;
     margin-left: 5%;
   }
-  .options_show{
-    // display: 'flex';
-    // flex-direction: 'column';
-    // margin-left: 3;
-    color: red;
-    background-color: black;
-  }
+
+  
 
 
   .comparison_container {
@@ -66,4 +61,11 @@
 
   }
 
+}
+
+.options_show{
+  // display: 'flex';
+  // flex-direction: 'column';
+  // margin-left: 3;
+  padding-left: 8%;
 }
