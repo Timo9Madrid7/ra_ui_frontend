@@ -11,7 +11,6 @@ import {
 import classes from '../styles.module.scss';
 import axios from '@/client';
 import { useLocation } from 'react-router-dom';
-import { saveAs } from 'file-saver';
 
 /** Components */
 import { useGetAudios, useGetAuralizationStatus } from '@/hooks/Auralization';
@@ -46,6 +45,7 @@ export const AuralizationPlot = ({
         error: audioOptionsError,
     } = useGetAudios();
 
+    // this useEffect is used to set the selectedAudioOption to the first element of the audioOptions array
     useEffect(() => {
         if (audioOptions && !isLoadingAudioOptions && !audioOptionsError) {
             if (audioOptions.length > 0) {
@@ -54,6 +54,8 @@ export const AuralizationPlot = ({
         }
     }, [audioOptions, isLoadingAudioOptions, audioOptionsError]);
 
+    // this useEffect is used to set the loadingAuralization to false when the auralization status is
+    // completed
     useEffect(() => {
         if (auralizationStatus === 'Completed') {
             setLoadingAuralization(false);
@@ -69,6 +71,7 @@ export const AuralizationPlot = ({
         5000
     );
 
+    // this useEffect is used to update the auralization status when the checkAuralizationResult changes
     useEffect(() => {
         if (checkAuralizationResult) {
             if (checkAuralizationResult.status) {
@@ -80,16 +83,14 @@ export const AuralizationPlot = ({
         }
     }, [checkAuralizationResult]);
 
+    // this useEffect is used to get the wav file when the auralization status is completed
     useEffect(() => {
         if (auralizationStatus === 'Completed' && auralizationId !== 0) {
             getAuralizationWav();
         }
     }, [auralizationStatus, auralizationId]);
 
-    if (audioOptionsError) {
-        console.log(audioOptionsError);
-    }
-
+    // this function formats the audioOptions to be used in the SelectAutoComplete component
     const formatedAudioOptions = () => {
         if (audioOptions) {
             return audioOptions.map((audioOption) => {
@@ -110,7 +111,6 @@ export const AuralizationPlot = ({
         simulationId: string;
         audioOptionId: number;
     }) => {
-        console.log('Post auralization', simulationId, audioOptionId);
         setAuralizationStatus('');
         setLoadingAuralization(true);
         try {
@@ -127,33 +127,25 @@ export const AuralizationPlot = ({
 
     const getAuralizationWav = async () => {
         try {
-            console.log(auralizationId, 'auralizationId');
-            const response = await axios.get(`/auralizations/2/wav`);
-
-            const blob = new Blob([response.data], { type: 'audio/x-wav' });
-            saveAs(blob, 'SimulationResultsss');
-            // const url = window.URL.createObjectURL(
-            //     new Blob([response.data], {
-            //         type: 'audio/wav',
-            //     })
-            // );
-            // download the wav
-            // const link = document.createElement('a');
-            // console.log(url, 'url <---');
-            // const link = document.createElement('a');
-            // link.href = url;
-            // link.download = 'auralizations.wav';
-            // link.click();
-
-            // setWavURL(url);
+            const response = await axios.get(
+                `/auralizations/${auralizationId}/wav`,
+                {
+                    responseType: 'arraybuffer',
+                }
+            );
+            const blob = new Blob([response.data], {
+                type: response.headers['content-type'],
+            });
+            const url = window.URL.createObjectURL(blob);
+            setWavURL(url);
         } catch (error) {
             console.log(error);
         }
     };
 
+    // this function determine which component should be rendered based on the current auralization status and the wavURL
     const getCurrentAuralizationAction = () => {
         if (wavURL) {
-            console.log(wavURL, 'wavURL');
             return <ReactAudioPlayer src={wavURL} controls />;
         }
         return !loadingAuralization ? (
@@ -210,6 +202,7 @@ export const AuralizationPlot = ({
                         setAuralizationStatus('');
                         setLoadingAuralization(false);
                         setAuralizationId(0);
+                        setWavURL(null);
                     }}
                 />
                 {selectedAudioOption && (
