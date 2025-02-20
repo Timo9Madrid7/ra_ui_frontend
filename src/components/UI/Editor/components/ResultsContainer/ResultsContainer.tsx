@@ -67,7 +67,7 @@ export const ResultsContainer: FC<ResultsContainerProps> = (
                     icon={<Download/>}
                     onClick={()=>setIsPopupDialogOpen(true)} />                            
 
-            {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen}/>}
+            {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} selectedSimulation={selectedSimulation}/>}
 
             <Tabs
                 value={selectedResultTab}
