@@ -6,6 +6,7 @@ import React, {
 import toast from 'react-hot-toast'; 
 import {useSearchParams} from 'react-router-dom';
 import styles from './styles.module.scss';
+import { saveAs } from 'file-saver';
 /**
  *
  * Components
@@ -30,7 +31,7 @@ import {
 
 import {AURALIZATION_OPTIONS, RESULT_PARAMETERS} from "@/constants";
 import { CircleOutlined, CircleRounded, ClearRounded, Done } from '@mui/icons-material';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 
 export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isPopupDialogOpen: (show: boolean) => void, selectedSimulation: any }) => {
@@ -55,28 +56,32 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
 
 // plots 
     const FREQUENCY_OPTIONS_RESULT = [
-        {value: '63', label: '63 Hz', disable: true},
-        {value: '125', label: '125 Hz', disable: false},
-        {value: '250', label: '250 Hz', disable: false},
-        {value: '500', label: '500 Hz', disable: false},
-        {value: '1000', label: '1k Hz', disable: false},
-        {value: '2000', label: '2k Hz', disable: false},
-        {value: '4000', label: '4k Hz', disable: true},
-        {value: '8000', label: '8k Hz', disable: true},
+        {value: '63', label: '63Hz', disable: true},
+        {value: '125', label: '125Hz', disable: false},
+        {value: '250', label: '250Hz', disable: false},
+        {value: '500', label: '500Hz', disable: false},
+        {value: '1000', label: '1000Hz', disable: false},
+        {value: '2000', label: '2000Hz', disable: false},
+        {value: '4000', label: '4000Hz', disable: true},
+        {value: '8000', label: '8000Hz', disable: true},
     ];
     const [checkedPlot, setCheckedPlot] = useState<string[]>([]);
 
     const handlePlotParentChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setCheckedPlot(event.target.checked ? FREQUENCY_OPTIONS_RESULT.map(f => f.value) : []);
+        console.log("hi im here", FREQUENCY_OPTIONS_RESULT.filter(f => !f.disable).map(f=>f.label))
+        setCheckedPlot(event.target.checked ? FREQUENCY_OPTIONS_RESULT.filter(f => !f.disable).map(f=>f.label) : []);
     };
 
     const handlePlotChildChange = (value: string) => (event: ChangeEvent<HTMLInputElement>) => {
+        console.log([...checkedPlot, value])
         setCheckedPlot(event.target.checked
             ? [...checkedPlot, value]
             : checkedPlot.filter(item => item !== value));
     };
 
-    const allCheckedPlot = checkedPlot.length === FREQUENCY_OPTIONS_RESULT.length;
+    // const allCheckedPlot = checkedPlot.length === FREQUENCY_OPTIONS_RESULT.length;
+    const enabledPlotOptions = FREQUENCY_OPTIONS_RESULT.filter(f => !f.disable).map(f => f.value);
+    const allCheckedPlot = enabledPlotOptions.every(opt => checkedPlot.includes(opt));
     const someCheckedPlot = checkedPlot.length > 0 && !allCheckedPlot;
 
 
@@ -116,40 +121,31 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
             Auralization: checkedAur, // Example: ["OptionA", "OptionB"]
             SimulationId: simulationID,
         };
-        // console.log("Selected Parameters:", selectedOptions);
+        console.log("Selected Parameters:", selectedOptions);
         
         try{
  
-            const resp = await axios.post(`exports/custom_export`, selectedOptions, {responseType: 'blob'}).then((response)=> {
-                console.log("response", response.status, response.data.token);
-              });
-            console.log("=========== 1")
-            console.log(resp);
-        } catch(error: any){
-            console.log("=========== 2")
-
-            if (error.response) {
-                console.log("=========== 3")
-
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
+            const response = await axios.post(`exports/custom_export`, selectedOptions, {responseType: 'blob'});
+            downloadFile(response);
+                    
+        } catch(error: any)
+        {
+            if (error.response) {                
                 console.log(error.response.data);
                 console.log(error.response.status);
                 console.log(error.response.headers);
-              } else if (error.request) {
-                console.log("=========== 4")
-
-                // The request was made but no response was received
-                // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                // http.ClientRequest in node.js
+            } else if (error.request) {               
                 console.log(error.request);
-              } else {
-                // Something happened in setting up the request that triggered an Error
+            } else {                
                 console.log('Error', error.message);
-              }
-            // alert("Submission failed");
+            }          
         }
     }
+    const downloadFile = (response:AxiosResponse) => {
+        // console.log("000000000000=> ", response);
+        const blob = new Blob([response.data], { type: 'application/zip' });
+        saveAs(blob, 'SimulationResult.zip');
+    };
 
     return (
         <Dialog
@@ -261,3 +257,5 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
         </Dialog>
     );
 };
+
+
