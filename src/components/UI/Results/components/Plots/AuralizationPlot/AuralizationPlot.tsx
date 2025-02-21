@@ -19,6 +19,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import { SelectAutoComplete } from '@/components/Base/Select/SelectAutoComplete';
 import { AnechoicOption } from '@/types';
 import { useEffect, useState } from 'react';
+import { ImpulseResponse } from '../../ImpulseResponse/ImpulseResponse';
 
 export const AuralizationPlot = ({
     value,
@@ -201,9 +202,8 @@ export const AuralizationPlot = ({
             className={classes.plot_container}
             style={{ display: value === index ? 'block' : 'none' }}
         >
-            <p>
-                
-            </p>
+            <h2 className={classes.plot_header}>Impulse Response</h2>
+            {impulseURL && <ImpulseResponse impulseURL={impulseURL} />}
             <List>
                 <h2 className={classes.plot_header}>Auralization</h2>
                 <SelectAutoComplete
