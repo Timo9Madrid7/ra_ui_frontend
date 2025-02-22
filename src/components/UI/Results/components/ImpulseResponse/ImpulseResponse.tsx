@@ -3,6 +3,7 @@ import { useWavesurfer } from '@wavesurfer/react';
 import Timeline from 'wavesurfer.js/dist/plugins/timeline.esm.js';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircle from '@mui/icons-material/PauseCircle';
+import colors from '@/theme/colors.module.scss';
 
 const formatTime = (seconds: number) =>
     [seconds / 60, seconds % 60]
@@ -14,7 +15,7 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
     const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
         container: containerRef,
         height: 100,
-        waveColor: 'rgb(200, 0, 200)',
+        waveColor: colors.raDarkPurple,
         progressColor: 'rgb(100, 0, 100)',
         url: impulseURL,
         plugins: useMemo(() => [Timeline.create()], []),
@@ -53,7 +54,11 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
                 }}
             >
                 <button onClick={onPlayPause} style={{ minWidth: '5em' }}>
-                    {isPlaying ? <PauseCircle /> : <PlayCircleIcon />}
+                    {isPlaying ? (
+                        <PauseCircle color='primary' />
+                    ) : (
+                        <PlayCircleIcon color='primary' />
+                    )}
                 </button>
                 <input
                     type='range'
@@ -70,43 +75,3 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
         </>
     );
 };
-
-// import * as React from 'react';
-// const { useMemo, useCallback, useRef } = React;
-// import { useWavesurfer } from '@wavesurfer/react';
-// import Timeline from 'wavesurfer.js/dist/plugins/timeline.esm.js';
-
-// const formatTime = (seconds: number) =>
-//     [seconds / 60, seconds % 60]
-//         .map((v) => `0${Math.floor(v)}`.slice(-2))
-//         .join(':');
-
-// export const ImpulsePlayback = ({ impulseURL }: { impulseURL: string }) => {
-//     const containerRef = useRef(null);
-//     const { wavesurfer, isPlaying, currentTime } = useWavesurfer({
-//         container: containerRef,
-//         height: 100,
-//         waveColor: 'rgb(200, 0, 200)',
-//         progressColor: 'rgb(100, 0, 100)',
-//         url: impulseURL,
-//         plugins: useMemo(() => [Timeline.create()], []),
-//     });
-
-//     const onPlayPause = useCallback(() => {
-//         wavesurfer && wavesurfer.playPause();
-//     }, [wavesurfer]);
-
-//     return (
-//         <>
-//             <div ref={containerRef} />
-
-//             <p>Current time: {formatTime(currentTime)}</p>
-
-//             <div style={{ margin: '1em 0', display: 'flex', gap: '1em' }}>
-//                 <button onClick={onPlayPause} style={{ minWidth: '5em' }}>
-//                     {isPlaying ? 'Pause' : 'Play'}
-//                 </button>
-//             </div>
-//         </>
-//     );
-// };
