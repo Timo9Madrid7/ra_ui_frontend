@@ -17,6 +17,7 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
         height: 100,
         waveColor: colors.raDarkPurple,
         progressColor: 'rgb(100, 0, 100)',
+        cursorColor: 'transparent',
         url: impulseURL,
         plugins: useMemo(() => [Timeline.create()], []),
     });
