@@ -43,7 +43,7 @@ export const useAuralizationStatus = (
         auralizationId,
         // continue to fetch if the auralization is not completed
         !['', 'Error', 'Completed', 0].includes(auralizationStatus),
-        5000
+        1000
     );
 
     useEffect(() => {
