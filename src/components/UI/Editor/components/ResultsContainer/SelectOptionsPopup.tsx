@@ -80,7 +80,7 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
     };
 
     // const allCheckedPlot = checkedPlot.length === FREQUENCY_OPTIONS_RESULT.length;
-    const enabledPlotOptions = FREQUENCY_OPTIONS_RESULT.filter(f => !f.disable).map(f => f.value);
+    const enabledPlotOptions = FREQUENCY_OPTIONS_RESULT.filter(f => !f.disable).map(f => f.label);
     const allCheckedPlot = enabledPlotOptions.every(opt => checkedPlot.includes(opt));
     const someCheckedPlot = checkedPlot.length > 0 && !allCheckedPlot;
 
@@ -103,7 +103,7 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
     const allCheckedAur = checkedAur.length === AURALIZATION_OPTIONS.length;
     const someCheckedAur = checkedAur.length > 0 && !allCheckedAur;
 
-    //// submit button
+    //// Download button
     
     const [isFormValid, setIsFormValid] = useState(false); // Disable/Enable Button Logic
     const simulationID = [selectedSimulation.id];
@@ -175,8 +175,8 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
                             label={param}
                             control={
                                 <Checkbox
-                                        icon={<CircleOutlined />}
-                                        checkedIcon = {<CircleRounded/>}
+                                        // icon={<CircleOutlined />}
+                                        // checkedIcon = {<CircleRounded/>}
                                         checked={checkedParam.includes(param)}
                                         onChange={handleParamChildChange(param)}
                                     />
@@ -200,8 +200,8 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
                     {FREQUENCY_OPTIONS_RESULT.map((option) => (
                                     <FormControlLabel key={option.label} label={option.label} control={
                                         <Checkbox 
-                                            icon={<CircleOutlined />}
-                                            checkedIcon = {<CircleRounded/>}
+                                            // icon={<CircleOutlined />}
+                                            // checkedIcon = {<CircleRounded/>}
                                             checked={checkedPlot.includes(option.label)}
                                             onChange={handlePlotChildChange(option.label)} disabled={option.disable}/>
                                         }/>                                        
@@ -225,8 +225,8 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
                             label={option.label}
                             control={
                                 <Checkbox
-                                    icon={<CircleOutlined />}
-                                    checkedIcon = {<CircleRounded/>}
+                                    // icon={<CircleOutlined />}
+                                    // checkedIcon = {<CircleRounded/>}
                                     checked={checkedAur.includes(option.value)}
                                     onChange={handleChildAurChange(option.value)}
                             />

@@ -177,6 +177,7 @@ export const DEFAULT_CAMERA_SETTINGS: Partial<
  * These are all the available ** auralization options **
  */
 export const AURALIZATION_OPTIONS = [
-    {value: 'wav', label: '.wav'},
-    {value: 'ir', label: 'Impulse Response (.wav, csv, xls)'}   
+    {value: 'wav', label: '.wav (Auralization)'},
+    {value: 'wavIr', label: '.wav (Impulse Response)'},
+    {value: 'csvIr', label: 'Impulse Response (csv)'}   
 ];
