@@ -1,18 +1,11 @@
 import { useMemo, useCallback, useRef, useState, useEffect } from 'react';
 import { useWavesurfer } from '@wavesurfer/react';
-<<<<<<< HEAD
 import { saveAs } from 'file-saver';
-=======
->>>>>>> auralization_UI
 import Timeline from 'wavesurfer.js/dist/plugins/timeline.esm.js';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircle from '@mui/icons-material/PauseCircle';
 import colors from '@/theme/colors.module.scss';
-<<<<<<< HEAD
 import DownloadIcon from "@mui/icons-material/Download";
-
-=======
->>>>>>> auralization_UI
 
 const formatTime = (seconds: number) =>
     [seconds / 60, seconds % 60]
