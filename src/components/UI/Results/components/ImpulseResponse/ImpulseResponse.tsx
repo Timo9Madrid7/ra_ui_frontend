@@ -42,16 +42,11 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
         }
     }, [wavesurfer]);
 
-<<<<<<< HEAD
-    
-
     const handleImpulseDownload = () => {
         const blob = new Blob([impulseURL], { type: 'audio/x-wav' });
         saveAs(blob, 'ImpulseResponse.wav');
     };
 
-=======
->>>>>>> auralization_UI
     const onSeek = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
             if (wavesurfer) {
@@ -80,10 +75,7 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
                         <PlayCircleIcon color='primary' />
                     )}
                 </button>
-<<<<<<< HEAD
                 
-=======
->>>>>>> auralization_UI
                 <input
                     type='range'
                     min='0'
@@ -95,15 +87,12 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
                 <span>
                     {formatTime(currentTime)} / {formatTime(duration)}
                 </span>
-<<<<<<< HEAD
 
                 <button onClick={handleImpulseDownload}
                         style={{ minWidth: '7em', display: 'flex', alignItems: 'center', gap: '0.1em' }}>
                     <DownloadIcon color="primary" />
                     Download Audio
                 </button>
-=======
->>>>>>> auralization_UI
             </div>
         </>
     );
