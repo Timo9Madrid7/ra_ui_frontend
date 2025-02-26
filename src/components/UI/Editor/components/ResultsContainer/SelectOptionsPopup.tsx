@@ -3,8 +3,6 @@ import React, {
     useEffect,
     useState
 } from 'react';
-import toast from 'react-hot-toast'; 
-import {useSearchParams} from 'react-router-dom';
 import styles from './styles.module.scss';
 import { saveAs } from 'file-saver';
 /**
@@ -13,98 +11,37 @@ import { saveAs } from 'file-saver';
  * */
 import {
     Dialog,
-    TextArea,
     DefaultButton, SuccessButton
 } from "@/components";
 import {
-    TextField,
-    FormControl,
     DialogContent,
     DialogActions,
-    Checkbox,
-    FormControlLabel,
-    Box,
-    MenuItem
+    Tooltip,
+    IconButton,
 } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 
-
-
-import {AURALIZATION_OPTIONS, RESULT_PARAMETERS} from "@/constants";
-import { CircleOutlined, CircleRounded, ClearRounded, Done } from '@mui/icons-material';
+import { ClearRounded, Done } from '@mui/icons-material';
 import axios, { AxiosResponse } from 'axios';
+import { SelectParametersOptions } from './SelectParametersOptions';
+import { SelectPlotsOptions } from './SelectPlotsOptions';
+import { SelectAuralizationOptions } from './SelectAuralizationOptions';
 
+import { useResultsContext } from '../../../Results/context/ResultsContext';
 
 export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isPopupDialogOpen: (show: boolean) => void, selectedSimulation: any }) => {
-    // console.log("simulationID:",  selectedSimulation.id);
+    
+    const { availableComparisons } = useResultsContext();
 // parameters 
     const [checkedParam, setCheckedParam] = useState<string[]>([]);
 
-    const handleParameterParentChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setCheckedParam(event.target.checked ? RESULT_PARAMETERS : []);
-    };
-
-    const handleParamChildChange = (param: number) => (
-        event: ChangeEvent<HTMLInputElement>
-        ) => {
-            setCheckedParam(event.target.checked
-                ? [...checkedParam, param]
-                : checkedParam.filter(item => item !== param));
-    };
-
-    const allCheckedParam = checkedParam.length === RESULT_PARAMETERS.length;
-    const someCheckedParam = checkedParam.length > 0 && !allCheckedParam;
-
 // plots 
-    const FREQUENCY_OPTIONS_RESULT = [
-        {value: '63', label: '63Hz', disable: true},
-        {value: '125', label: '125Hz', disable: false},
-        {value: '250', label: '250Hz', disable: false},
-        {value: '500', label: '500Hz', disable: false},
-        {value: '1000', label: '1000Hz', disable: false},
-        {value: '2000', label: '2000Hz', disable: false},
-        {value: '4000', label: '4000Hz', disable: true},
-        {value: '8000', label: '8000Hz', disable: true},
-    ];
     const [checkedPlot, setCheckedPlot] = useState<string[]>([]);
-
-    const handlePlotParentChange = (event: ChangeEvent<HTMLInputElement>) => {
-        console.log("hi im here", FREQUENCY_OPTIONS_RESULT.filter(f => !f.disable).map(f=>f.label))
-        setCheckedPlot(event.target.checked ? FREQUENCY_OPTIONS_RESULT.filter(f => !f.disable).map(f=>f.label) : []);
-    };
-
-    const handlePlotChildChange = (value: string) => (event: ChangeEvent<HTMLInputElement>) => {
-        console.log([...checkedPlot, value])
-        setCheckedPlot(event.target.checked
-            ? [...checkedPlot, value]
-            : checkedPlot.filter(item => item !== value));
-    };
-
-    // const allCheckedPlot = checkedPlot.length === FREQUENCY_OPTIONS_RESULT.length;
-    const enabledPlotOptions = FREQUENCY_OPTIONS_RESULT.filter(f => !f.disable).map(f => f.label);
-    const allCheckedPlot = enabledPlotOptions.every(opt => checkedPlot.includes(opt));
-    const someCheckedPlot = checkedPlot.length > 0 && !allCheckedPlot;
-
 
 //Auralization
     const [checkedAur, setCheckedAur] = useState<string[]>([]);
 
-    const handleParentAurChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setCheckedAur(event.target.checked ? AURALIZATION_OPTIONS.map(f => f.value) : []);
-    };
-
-    const handleChildAurChange = (option: string) => (
-        event: React.ChangeEvent<HTMLInputElement>
-        ) => {
-        setCheckedAur(event.target.checked
-            ? [...checkedAur, option]
-            : checkedAur.filter(item => item !== option));
-    };
-
-    const allCheckedAur = checkedAur.length === AURALIZATION_OPTIONS.length;
-    const someCheckedAur = checkedAur.length > 0 && !allCheckedAur;
-
-    //// Download button
-    
+//// Download button    
     const [isFormValid, setIsFormValid] = useState(false); // Disable/Enable Button Logic
     const simulationID = [selectedSimulation.id];
     useEffect(() => {
@@ -116,6 +53,7 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
         e.preventDefault();
 
         const selectedOptions = {
+            // All: "",
             Parameters: checkedParam, // Example: ["Option1", "Option2"]
             EDC: checkedPlot, // Example: ["80Hz", "125Hz"]
             Auralization: checkedAur, // Example: ["OptionA", "OptionB"]
@@ -142,7 +80,6 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
         }
     }
     const downloadFile = (response:AxiosResponse) => {
-        // console.log("000000000000=> ", response);
         const blob = new Blob([response.data], { type: 'application/zip' });
         saveAs(blob, 'SimulationResult.zip');
     };
@@ -155,85 +92,29 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
             onClose={() => isPopupDialogOpen(false)}
         >
             <form>
-                <DialogContent>
-
-                    {/* parameters  */}
-                    <FormControlLabel                                   
-                        label="Parameters :"                       
-                        control={
-                        <Checkbox
-                            checked={allCheckedParam}
-                            indeterminate={someCheckedParam}
-                            onChange={handleParameterParentChange}
-                        />
-                        }
-                    />                    
-                    <Box className={styles.options_show} >
-                        {RESULT_PARAMETERS.map((param) => (
-                        <FormControlLabel
-                            key={param}
-                            label={param}
-                            control={
-                                <Checkbox
-                                        // icon={<CircleOutlined />}
-                                        // checkedIcon = {<CircleRounded/>}
-                                        checked={checkedParam.includes(param)}
-                                        onChange={handleParamChildChange(param)}
-                                    />
-                            }
-                        />
+                <DialogContent>     
+                    {/* <h1>Available Comparisons</h1>
+                    <ul>
+                        {availableComparisons.map((comparison, index) => (
+                            <li key={index}>
+                                {comparison.formState?.title} - {comparison.color}
+                            </li>
                         ))}
-                    </Box>
+                    </ul> */}
+                    <Tooltip title="If you don't choose any options then an Excel file with all the values will download. But if you select some options then it will also download the CSV's" className={styles.info_btn}>
+                        <IconButton color="primary">
+                            <InfoIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <SelectParametersOptions checkedParam={checkedParam} 
+                        setCheckedParam={setCheckedParam} />
 
-                    {/* plots  */}
-                    <FormControlLabel
-                        label="Plots :"                       
-                        control={
-                        <Checkbox
-                            checked={allCheckedPlot}
-                            indeterminate={someCheckedPlot}
-                            onChange={handlePlotParentChange}
-                        />
-                        }
-                    />                    
-                    <Box className={styles.options_show}>
-                    {FREQUENCY_OPTIONS_RESULT.map((option) => (
-                                    <FormControlLabel key={option.label} label={option.label} control={
-                                        <Checkbox 
-                                            // icon={<CircleOutlined />}
-                                            // checkedIcon = {<CircleRounded/>}
-                                            checked={checkedPlot.includes(option.label)}
-                                            onChange={handlePlotChildChange(option.label)} disabled={option.disable}/>
-                                        }/>                                        
-                                ))}
-                    </Box>      
-                    {/* auralization  */}
-                    <FormControlLabel
-                        label="Auralization :"                       
-                        control={
-                        <Checkbox                            
-                            checked={allCheckedAur}
-                            indeterminate={someCheckedAur}
-                            onChange={handleParentAurChange}
-                        />
-                        }
-                    />                    
-                    <Box className={styles.options_show}>
-                        {AURALIZATION_OPTIONS.map((option) => (
-                        <FormControlLabel
-                            key={option.value}
-                            label={option.label}
-                            control={
-                                <Checkbox
-                                    // icon={<CircleOutlined />}
-                                    // checkedIcon = {<CircleRounded/>}
-                                    checked={checkedAur.includes(option.value)}
-                                    onChange={handleChildAurChange(option.value)}
-                            />
-                            }
-                        />
-                        ))}
-                    </Box>
+                    <SelectPlotsOptions checkedPlot={checkedPlot} 
+                        setCheckedPlot={setCheckedPlot} />
+                        
+                    <SelectAuralizationOptions checkedAur = {checkedAur}
+                        setCheckedAur = {setCheckedAur}/> 
+
                 </DialogContent>
                 <DialogActions>
                     <div>
@@ -248,7 +129,7 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
                             label="Download"
                             type="submit"
                             icon={<Done/>}
-                            disabled={!isFormValid}
+                            // disabled={!isFormValid}
                             onClick={(e) => handleDownloadFiles(e)}
                         />
                     </div>
@@ -257,5 +138,6 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
         </Dialog>
     );
 };
+
 
 
