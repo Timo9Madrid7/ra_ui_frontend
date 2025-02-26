@@ -1,12 +1,18 @@
 import { useMemo, useCallback, useRef, useState, useEffect } from 'react';
 import { useWavesurfer } from '@wavesurfer/react';
+<<<<<<< HEAD
 import { saveAs } from 'file-saver';
+=======
+>>>>>>> auralization_UI
 import Timeline from 'wavesurfer.js/dist/plugins/timeline.esm.js';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircle from '@mui/icons-material/PauseCircle';
 import colors from '@/theme/colors.module.scss';
+<<<<<<< HEAD
 import DownloadIcon from "@mui/icons-material/Download";
 
+=======
+>>>>>>> auralization_UI
 
 const formatTime = (seconds: number) =>
     [seconds / 60, seconds % 60]
@@ -36,6 +42,7 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
         }
     }, [wavesurfer]);
 
+<<<<<<< HEAD
     
 
     const handleImpulseDownload = () => {
@@ -43,6 +50,8 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
         saveAs(blob, 'ImpulseResponse.wav');
     };
 
+=======
+>>>>>>> auralization_UI
     const onSeek = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
             if (wavesurfer) {
@@ -71,7 +80,10 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
                         <PlayCircleIcon color='primary' />
                     )}
                 </button>
+<<<<<<< HEAD
                 
+=======
+>>>>>>> auralization_UI
                 <input
                     type='range'
                     min='0'
@@ -83,12 +95,15 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
                 <span>
                     {formatTime(currentTime)} / {formatTime(duration)}
                 </span>
+<<<<<<< HEAD
 
                 <button onClick={handleImpulseDownload}
                         style={{ minWidth: '7em', display: 'flex', alignItems: 'center', gap: '0.1em' }}>
                     <DownloadIcon color="primary" />
                     Download Audio
                 </button>
+=======
+>>>>>>> auralization_UI
             </div>
         </>
     );
