@@ -36,8 +36,7 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
     }, [wavesurfer]);
 
     const handleImpulseDownload = () => {
-        const blob = new Blob([impulseURL], { type: 'audio/x-wav' });
-        saveAs(blob, 'ImpulseResponse.wav');
+        saveAs(impulseURL, 'ImpulseResponse.wav');
     };
 
     const onSeek = useCallback(
