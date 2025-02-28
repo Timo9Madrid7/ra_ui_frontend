@@ -411,3 +411,11 @@ export type AnechoicOption = {
     name: string;
     updatedAt: string;
 }
+
+export type SimulationSettingOption = {
+    simulationType: string;
+    label: string;
+    description: string;
+    createdAt: string;
+    updatedAt: string;
+}

@@ -32,6 +32,7 @@ const maxImpulseResponse = 20;
  * */
 import {ActionType as EditorActionType, useEditorContext} from '@/context/EditorContext';
 
+const isStaticRender: boolean = false; // true: static render; false: dynamic render
 
 type SolverSettingsProps = {
     selectedSimulation: Simulation;
@@ -39,6 +40,8 @@ type SolverSettingsProps = {
 };
 
 import styles from './styles.module.scss'
+import { SelectAutoComplete } from '@/components/Base/Select/SelectAutoComplete';
+import { useSimulationSettingOptions } from './hooks/useSimulationSettingOptions';
 
 export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isInResultsMode}) => {
     const [preset, setPreset] = useState(
@@ -170,6 +173,55 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
     
     };
 
+    const { formattedSimulationSettingOptions } = useSimulationSettingOptions(!isStaticRender);
+    const AvailabelMethodSelector: (isStaticRender: boolean) => JSX.Element | null = (isStaticRender) => {
+        if (isStaticRender) {
+            return (
+                <RadioGroup
+                    value={taskType}
+                    name="method-selector"
+                    onChange = {(e) => triggerSetTaskType(e.target.value)}
+                >
+                    <FormControlLabel
+                        control={<Radio size={'small'}/>}
+                        value={MethodEnum.BOTH.toString()}
+                        disabled={false}
+                        label="Both methods (DE & DG)"
+                    />
+                    <Tooltip placement={'right'} title={DG_TEXT}>
+                        <FormControlLabel
+                            value={MethodEnum.DG.toString()}
+                            control={<Radio size={'small'}/>}
+                            label="Discontinuous Galerkin method (DG)"
+                        />
+                    </Tooltip>
+                    <Tooltip placement={'right'} title={DE_TEXT}>
+                        <FormControlLabel
+                            value={MethodEnum.DE.toString()}
+                            control={<Radio size={'small'}/>}
+                            label="Diffusion Equation method (DE)"
+                        />
+                    </Tooltip>
+                </RadioGroup>
+            );
+        } else {
+            // drop down menu
+            return (
+                <SelectAutoComplete
+                    options={formattedSimulationSettingOptions()}
+                    label='Available Methods'
+                    isOptionEqualToValue={(option, value) => option.id === (value as { id: number }).id}
+                    onChange={(_, value) => {
+                        if (value) {
+                            triggerSetTaskType(value.id.toString());
+                        }
+                    }}
+                />
+            );
+        }
+        return null;
+    }
+
     return (
         <div className={styles.settings_container}>
             <FormControl>
@@ -204,6 +256,13 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                     ) : (
                         <>
                             <div>
+                                <div>
+                                    <h3 className={styles.section_title}>Available Methods</h3>
+                                    <p className={styles.footnote}>currently we support DG
+                                        (<i className={styles.blue}>for low frequencies</i>) and DE
+                                        (<i className={styles.blue}>for high frequencies</i>) methods.</p>
+                                        {AvailabelMethodSelector(isStaticRender)}
+                                </div>
                                 <h3 className={styles.section_title}>Customize Settings</h3>
                                 <div className={styles.customize_section}>
 
@@ -265,38 +324,6 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                                 </div>
                             </div>
                             <Divider/>
-                            <div>
-                                <h3 className={styles.section_title}>Available Methods</h3>
-                                <p className={styles.footnote}>currently we support DG
-                                    (<i className={styles.blue}>for low frequencies</i>) and DE
-                                    (<i className={styles.blue}>for high frequencies</i>) methods.</p>
-                                <RadioGroup
-                                    value={taskType}
-                                    name="method-selector"
-                                    onChange = {(e) => triggerSetTaskType(e.target.value)}
-                                >
-                                    <FormControlLabel
-                                        control={<Radio size={'small'}/>}
-                                        value={MethodEnum.BOTH.toString()}
-                                        disabled={false}
-                                        label="Both methods (DE & DG)"
-                                    />
-                                    <Tooltip placement={'right'} title={DG_TEXT}>
-                                        <FormControlLabel
-                                            value={MethodEnum.DG.toString()}
-                                            control={<Radio size={'small'}/>}
-                                            label="Discontinuous Galerkin method (DG)"
-                                        />
-                                    </Tooltip>
-                                    <Tooltip placement={'right'} title={DE_TEXT}>
-                                        <FormControlLabel
-                                            value={MethodEnum.DE.toString()}
-                                            control={<Radio size={'small'}/>}
-                                            label="Diffusion Equation method (DE)"
-                                        />
-                                    </Tooltip>
-                                </RadioGroup>
-                            </div>
                         </>
                     )}
                 </div>
