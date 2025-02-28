@@ -32,6 +32,16 @@ import { useResultsContext } from '../../../Results/context/ResultsContext';
 export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isPopupDialogOpen: (show: boolean) => void, selectedSimulation: any }) => {
     
     const { availableComparisons } = useResultsContext();
+    
+    const formatedSimulation = availableComparisons.map((comparison) => {
+        return {
+            ID : comparison.formState.simulationId,
+            // title: comparison.formState.title,
+        }     
+    })    
+    console.log("simulationID:", formatedSimulation);
+    const simulationID = formatedSimulation.map(sim => sim.ID);
+    // const simulationID = [selectedSimulation.id]
 // parameters 
     const [checkedParam, setCheckedParam] = useState<string[]>([]);
 
@@ -41,28 +51,28 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
 //Auralization
     const [checkedAur, setCheckedAur] = useState<string[]>([]);
 
-//// Download button    
+//// Download    
     const [isFormValid, setIsFormValid] = useState(false); // Disable/Enable Button Logic
-    const simulationID = [selectedSimulation.id];
+    
     useEffect(() => {
         setIsFormValid(checkedParam.length > 0 || checkedPlot.length > 0 || checkedAur.length > 0);
     }, [checkedParam, checkedPlot, checkedAur]);
 
     const handleDownloadFiles= async (e: React.MouseEvent) =>{
-
+       
         e.preventDefault();
-
+             
+        const xlsx = ["true"];  
         const selectedOptions = {
-            // All: "",
-            Parameters: checkedParam, // Example: ["Option1", "Option2"]
-            EDC: checkedPlot, // Example: ["80Hz", "125Hz"]
-            Auralization: checkedAur, // Example: ["OptionA", "OptionB"]
+            xlsx: xlsx,
+            Parameters: checkedParam,
+            EDC: checkedPlot,
+            Auralization: checkedAur,
             SimulationId: simulationID,
         };
         console.log("Selected Parameters:", selectedOptions);
         
         try{
- 
             const response = await axios.post(`exports/custom_export`, selectedOptions, {responseType: 'blob'});
             downloadFile(response);
                     
@@ -92,15 +102,7 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
             onClose={() => isPopupDialogOpen(false)}
         >
             <form>
-                <DialogContent>     
-                    {/* <h1>Available Comparisons</h1>
-                    <ul>
-                        {availableComparisons.map((comparison, index) => (
-                            <li key={index}>
-                                {comparison.formState?.title} - {comparison.color}
-                            </li>
-                        ))}
-                    </ul> */}
+                <DialogContent>
                     <Tooltip title="If you don't choose any options then an Excel file with all the values will download. But if you select some options then it will also download the CSV's" className={styles.info_btn}>
                         <IconButton color="primary">
                             <InfoIcon />
