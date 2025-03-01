@@ -403,3 +403,11 @@ export type HiddenLayer = {
     id: string;
 };
 
+export type AnechoicOption = {
+    createdAt: string;
+    description: string;
+    id: number;
+    isUserFile: boolean;
+    name: string;
+    updatedAt: string;
+}
