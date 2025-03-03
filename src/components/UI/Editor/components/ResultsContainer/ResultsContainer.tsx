@@ -13,7 +13,7 @@ import { Tabs } from '@mui/material';
 import BarChartOutlinedIcon from '@mui/icons-material/BarChartOutlined';
 import { MusicNote } from '@mui/icons-material';
 import { AuralizationPlot } from '@/components/UI/Results/components/Plots/AuralizationPlot';
-import { Download } from '@mui/icons-material';
+
 
 /** Hooks */
 import InsightsIcon from '@mui/icons-material/Insights';
@@ -22,6 +22,7 @@ import Tab from '@mui/material/Tab';
 
 import {ModelInformation, Simulation} from "@/types";
 import { Download, MusicVideo } from '@mui/icons-material';
+import { SelectOptionsPopup } from './SelectOptionsPopup';
 
 
 
