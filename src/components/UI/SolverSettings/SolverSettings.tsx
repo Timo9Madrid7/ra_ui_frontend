@@ -13,6 +13,8 @@ import {
     CircularProgress
 } from '@mui/material';
 import {
+    DefaultButton,
+    Dialog,
     NumberInput,
     useSolverSettings,
     useUpdateSolverSettings,
@@ -39,7 +41,7 @@ import { useSimulationSettingParams } from './hooks/useSimulationSettingParams';
 import { SelectAutoComplete } from '@/components/Base/Select/SelectAutoComplete';
 import { useSimulationSettingOptions } from './hooks/useSimulationSettingOptions';
 import CustomInput from './components/CustomInput';
-import { is } from '@react-three/fiber/dist/declarations/src/core/utils';
+import { JSONEditor } from './components/JSONEditor';
 
 export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isInResultsMode}) => {
     const [preset, setPreset] = useState(
@@ -59,7 +61,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
     const [taskType, setTaskType] = useState(selectedSimulation.taskType);
     const [energyDecayThreshold, setEnergyDecayThreshold] = useState<number | null>(dgSettings?.energyDecayThreshold);
     const [autoStop, setAutoStop] = useState(dgSettings.energyDecayThreshold ? true : false);
-
+    const [jsonPopup, setJsonPopup] = useState(false);
     const updateSolverSettings = useUpdateSolverSettings();
 
     const {
@@ -67,13 +69,14 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
         isLoading: isCustomSettingParamsLoading,
     } = useSimulationSettingParams(true, taskType as string);
 
-    const [settingsState, setSettingsState] = useState<{ [key: string]: any }>(() => {
-        return customSettingParams?.reduce((acc: { [key: string]: any }, setting: SimulationParamSetting) => {
+    const [settingsState, setSettingsState] = useState<{ [key: string]: any }>({});
+
+    useEffect(() => {
+        setSettingsState(customSettingParams?.reduce((acc: { [key: string]: any }, setting: SimulationParamSetting) => {
             acc[setting.name] = setting.default;
             return acc;
-        }, {}) || {};
-    });
-
+        }, {}) || {});
+    }, [customSettingParams])
     const {
         saveImpulseResponseLength,
         saveEnergyDecayThreshold,
@@ -341,7 +344,28 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                                     <CircularProgress/>
                                 ) : (
                                     <div>
-                                        <h3 className={styles.section_title}>Parameters Setting</h3>
+                                        {jsonPopup && (
+                                            <Dialog
+                                                fullWidth
+                                                maxWidth={'sm'}
+                                                open={true}
+                                                title={'Edit Params with JSON'}
+                                                onClose={() => setJsonPopup(false)}
+                                            >
+                                                <JSONEditor
+                                                    settingState={settingsState}
+                                                    setSettingState={setSettingsState}
+                                                />
+                                            </Dialog>
+                                        )}
+                                        <div className={styles["flex-container"]}>
+                                            <h3 className={styles.section_title}>Params Setting</h3>
+                                            <DefaultButton label='Edit with JSON' sx={{
+                                                "width": '150px',
+                                            }} onClick={() => {
+                                                setJsonPopup(true);
+                                            }}></DefaultButton>
+                                        </div>
                                         {customSettingParams.map((setting: SimulationParamSetting) => (
                                             <CustomInput
                                                 key={setting.name}
@@ -352,6 +376,10 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                                                 }}
                                             />
                                         ))}
+                                        
+                                        <div className={styles["flex-container"]}>
+                                            <DefaultButton label='Save'></DefaultButton>
+                                        </div>
                                     </div>
                                 )
                             }
