@@ -321,6 +321,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                                             blurOnStep={false}
                                         />
                                     </div>
+
                                 </div>
                             </div>
                             <Divider/>

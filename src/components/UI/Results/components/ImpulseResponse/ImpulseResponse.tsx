@@ -1,9 +1,11 @@
 import { useMemo, useCallback, useRef, useState, useEffect } from 'react';
 import { useWavesurfer } from '@wavesurfer/react';
+import { saveAs } from 'file-saver';
 import Timeline from 'wavesurfer.js/dist/plugins/timeline.esm.js';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import PauseCircle from '@mui/icons-material/PauseCircle';
 import colors from '@/theme/colors.module.scss';
+import DownloadIcon from "@mui/icons-material/Download";
 
 const formatTime = (seconds: number) =>
     [seconds / 60, seconds % 60]
@@ -33,6 +35,10 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
         }
     }, [wavesurfer]);
 
+    const handleImpulseDownload = () => {
+        saveAs(impulseURL, 'ImpulseResponse.wav');
+    };
+
     const onSeek = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
             if (wavesurfer) {
@@ -61,6 +67,7 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
                         <PlayCircleIcon color='primary' />
                     )}
                 </button>
+                
                 <input
                     type='range'
                     min='0'
@@ -72,6 +79,12 @@ export const ImpulseResponse = ({ impulseURL }: { impulseURL: string }) => {
                 <span>
                     {formatTime(currentTime)} / {formatTime(duration)}
                 </span>
+
+                <button onClick={handleImpulseDownload}
+                        style={{ minWidth: '7em', display: 'flex', alignItems: 'center', gap: '0.1em' }}>
+                    <DownloadIcon color="primary" />
+                    Download Audio
+                </button>
             </div>
         </>
     );
