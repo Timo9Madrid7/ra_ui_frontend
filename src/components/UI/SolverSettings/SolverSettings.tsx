@@ -33,6 +33,7 @@ type SolverSettingsProps = {
 };
 
 import styles from './styles.module.scss'
+import { useSimulationSetting } from './hooks/useSimulationSettings';
 
 export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isInResultsMode}) => {
     const [preset, setPreset] = useState(
@@ -54,6 +55,15 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
     const [autoStop, setAutoStop] = useState(dgSettings.energyDecayThreshold ? true : false);
 
     const updateSolverSettings = useUpdateSolverSettings();
+
+    // get simulation params setting
+
+    const {
+        data: simulationSetting,
+        isLoading: simulationSettingLoading,
+    } = useSimulationSetting(true);
+
+    console.log(simulationSetting, simulationSettingLoading, "<----")
 
     const {
         saveImpulseResponseLength,

@@ -1,17 +1,17 @@
-import { AnechoicOption } from '@/types';
 import axios from '@/client';
 import { useQuery } from '@tanstack/react-query';
+import { MethodEnum } from '@/enums';
 
 const getSimulationSetting = async (method: string) => {
-    const { data } = await axios.get('/simulation_Settings/audiofiles');
+    const { data } = await axios.get('/simulation_Settings/' + method);
 
     return data;
 };
 
-const useParamSetting = (enabled = true, method = "DE"
+export const useSimulationSetting = (enabled = true, method = MethodEnum.DE
 ) => {
-    const query = useQuery<AnechoicOption[], Error>(
-        ['anechoic'],
+    const query = useQuery(
+        ['simulationSetting'],
         () => getSimulationSetting(method),
         {
             enabled: enabled,
