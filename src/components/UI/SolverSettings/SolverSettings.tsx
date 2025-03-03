@@ -27,12 +27,6 @@ import {DE_TEXT, DG_TEXT} from "@/constants";
 const minImpulseResponse = 0.005;
 const maxImpulseResponse = 20;
 
-/**
- * Contexts
- * */
-import {ActionType as EditorActionType, useEditorContext} from '@/context/EditorContext';
-
-
 type SolverSettingsProps = {
     selectedSimulation: Simulation;
     isInResultsMode: boolean;
@@ -262,6 +256,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                                             blurOnStep={false}
                                         />
                                     </div>
+
                                 </div>
                             </div>
                             <Divider/>
