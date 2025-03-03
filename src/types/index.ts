@@ -419,3 +419,22 @@ export type SimulationSettingOption = {
     createdAt: string;
     updatedAt: string;
 }
+
+export interface SimulationParamSetting {
+    default: any;
+    display: string;
+    max?: number | null;
+    min?: number | null;
+    name: string;
+    step?: number;
+    type: string;
+    options?: { [key: string]: string };
+    startAdornment?: string;
+    endAdornment?: string;
+}
+
+export interface CustomInputProps {
+    setting: SimulationParamSetting;
+    value: any;
+    onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+}

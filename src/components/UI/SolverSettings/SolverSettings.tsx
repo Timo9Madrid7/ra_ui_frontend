@@ -9,7 +9,8 @@ import {
     Divider,
     RadioGroup,
     FormControl,
-    FormControlLabel
+    FormControlLabel,
+    CircularProgress
 } from '@mui/material';
 import {
     NumberInput,
@@ -20,7 +21,7 @@ import {
 /**
  * Types, Enums, Constants
  * */
-import {Simulation, Status} from '@/types';
+import {SimulationParamSetting, Simulation, Status} from '@/types';
 import {PresetEnum, MethodEnum} from "@/enums";
 import {DE_TEXT, DG_TEXT} from "@/constants";
 
@@ -34,9 +35,11 @@ type SolverSettingsProps = {
 };
 
 import styles from './styles.module.scss'
-import { useSimulationSetting } from './hooks/useSimulationSettings';
+import { useSimulationSettingParams } from './hooks/useSimulationSettingParams';
 import { SelectAutoComplete } from '@/components/Base/Select/SelectAutoComplete';
 import { useSimulationSettingOptions } from './hooks/useSimulationSettingOptions';
+import CustomInput from './components/CustomInput';
+import { is } from '@react-three/fiber/dist/declarations/src/core/utils';
 
 export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isInResultsMode}) => {
     const [preset, setPreset] = useState(
@@ -59,14 +62,17 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
 
     const updateSolverSettings = useUpdateSolverSettings();
 
-    // get simulation params setting
-
     const {
-        data: simulationSetting,
-        isLoading: simulationSettingLoading,
-    } = useSimulationSetting(true);
+        data: customSettingParams,
+        isLoading: isCustomSettingParamsLoading,
+    } = useSimulationSettingParams(true, taskType as string);
 
-    console.log(simulationSetting, simulationSettingLoading, "<----")
+    const [settingsState, setSettingsState] = useState<{ [key: string]: any }>(() => {
+        return customSettingParams?.reduce((acc: { [key: string]: any }, setting: SimulationParamSetting) => {
+            acc[setting.name] = setting.default;
+            return acc;
+        }, {}) || {};
+    });
 
     const {
         saveImpulseResponseLength,
@@ -216,6 +222,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                     label='Available Methods'
                     isOptionEqualToValue={(option, value) => option.id === (value as { id: number }).id}
                     onChange={(_, value) => {
+                        console.log(value, " value ")
                         if (value) {
                             triggerSetTaskType(value.id.toString());
                         }
@@ -329,6 +336,25 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                                 </div>
                             </div>
                             <Divider/>
+                            {
+                                isCustomSettingParamsLoading ? (
+                                    <CircularProgress/>
+                                ) : (
+                                    <div>
+                                        <h3 className={styles.section_title}>Parameters Setting</h3>
+                                        {customSettingParams.map((setting: SimulationParamSetting) => (
+                                            <CustomInput
+                                                key={setting.name}
+                                                setting={setting}
+                                                value={setting.default}
+                                                onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+                                                    console.log(e.target.value);
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                )
+                            }
                         </>
                     )}
                 </div>
