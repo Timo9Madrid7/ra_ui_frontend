@@ -62,7 +62,7 @@ export const SelectOptionsPopup = ({isPopupDialogOpen, isOptions}: { isPopupDial
                         setCheckedParam={setCheckedParam} />
                     )}
                     
-                    { (isOptions == 'all') && 
+                    { (isOptions == 'all' || isOptions == 'plot') && 
                     <SelectPlotsOptions checkedPlot={checkedPlot} 
                         setCheckedPlot={setCheckedPlot} />
                     }

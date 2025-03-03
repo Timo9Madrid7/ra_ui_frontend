@@ -57,55 +57,67 @@ export const ParameterPlot = (
     const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false);
 
     return (
-
-        <div className={classes.plot_container} style={{display: value === index ? 'block' : 'none'}}>
-            <div>
-                <div className={classes.plot_header}>
-                    <>
-                        Select parameter
-                    </>
-                </div>
-                <div className={classes.plot_actions}>
-                    {RESULT_PARAMETERS.map((parameter) => (
-                        <Button
-                            key={parameter}
-                            variant={'outlined'}
-                            color={parameter === selectedParameter ? 'error' : 'secondary'}
-                            onClick={() => setSelectedParameter(parameter)}>
-                            {parameter}
-                        </Button>
-                    ))}
-                </div>
-            </div>
-            <div className={classes.plot}>
-                <Plot
-                    data={plotlyData}
-                    config={plotlyDefaultConfig}
-                    style={{height: '100%', width: '100%'}}
-                    useResizeHandler={true}
-                    layout={
-                        {
-                            ...plotlyDefaultLayout,
-                            yaxis: {
-                                ...plotlyDefaultLayout.yaxis,
-                                range: yAxisRange,
-                                title: {
-                                    ...plotlyDefaultTitle,
-                                    text: getParameterYaxisTitle(selectedParameter),
+        <div style={{display: value === index ? 'block' : 'none', width: "100%"}}> 
+            <div style={{         
+                    display: "block",
+                    width: "100%"
+                    }}>
+                <div style={{                    
+                    width: "100%",
+                    }}>
+                    <div className={classes.plot_container}>
+                        <div>
+                            <div className={classes.plot_header}>
+                                <>
+                                    Select parameter
+                                </>
+                            </div>
+                            <div className={classes.plot_actions}>
+                                {RESULT_PARAMETERS.map((parameter) => (
+                                    <Button
+                                        key={parameter}
+                                        variant={'outlined'}
+                                        color={parameter === selectedParameter ? 'error' : 'secondary'}
+                                        onClick={() => setSelectedParameter(parameter)}>
+                                        {parameter}
+                                    </Button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className={classes.plot}>
+                            <Plot
+                                data={plotlyData}
+                                config={plotlyDefaultConfig}
+                                style={{height: '100%', width: '100%'}}
+                                useResizeHandler={true}
+                                layout={
+                                    {
+                                        ...plotlyDefaultLayout,
+                                        yaxis: {
+                                            ...plotlyDefaultLayout.yaxis,
+                                            range: yAxisRange,
+                                            title: {
+                                                ...plotlyDefaultTitle,
+                                                text: getParameterYaxisTitle(selectedParameter),
+                                            }
+                                        },
+                                    }
                                 }
-                            },
-                        }
-                    }
-                />
+                            />
+                        </div>                                                
+                    </div>
+                </div>
+                <div>                   
+                    <PrimaryButton 
+                            className={styles.bottom_download_btn}
+                            label="Download Parameter"
+                            // icon={<Download/>}
+                            onClick={()=>setIsPopupDialogOpen(true)} 
+                            />                            
+                    {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"param"}/>}                    
+                </div>                
             </div>
-            <PrimaryButton 
-                    className={styles.bottom_download_btn}
-                    label="Download Parameter"
-                    // icon={<Download/>}
-                    onClick={()=>setIsPopupDialogOpen(true)} 
-                    />                            
-
-            {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"param"}/>}
         </div>
+       
     );
 };
