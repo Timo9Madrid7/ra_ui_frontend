@@ -29,6 +29,7 @@ import styles from './styles.module.scss';
 import {PresetEnum} from "@/enums";
 import {SsidChart} from "@mui/icons-material";
 import {DefaultButton} from "@/components";
+import {DownloadAll} from './DownloadAll';
 
 type ResultsComparisonsPanel = {
     originalModelInformation: ModelInformation;
@@ -168,19 +169,21 @@ export const ResultsComparisonsPanel: FC<ResultsComparisonsPanel> = (
                                 index={index}
                                 color={color}
                                 isSelected={selectedComparisonIndex === index}
-                            />
+                            />                            
                         </ResultComparisonProvider>
+                        
                     ))}
                 </div>
+               
                 <Divider/>
-
+                
                 <div className={styles.footer}>
                     <IconButton
                         edge='end'
                         onClick={handleDrawerClose}>
                         <ChevronRightIcon/>
                     </IconButton>
-
+                    
                     {availableComparisons.length < MAX_COMPARISONS && (
                         <>
                             <div>
@@ -188,6 +191,10 @@ export const ResultsComparisonsPanel: FC<ResultsComparisonsPanel> = (
                                     disabled={!allProjectsWithSims || Object.keys(allProjectsWithSims).length === 0}
                                     onClick={() => setShowPopup(true)}
                                     label='Add simulation'/>
+                            </div>
+                            {/* FOR DOWNLOADING ALL THE FILES TOGETHER IN A ZIP FILE  */}
+                            <div>
+                                <DownloadAll/>
                             </div>
                             <AddComparisonPopup showPopup={showPopup} setShowPopup={setShowPopup}/>
                         </>

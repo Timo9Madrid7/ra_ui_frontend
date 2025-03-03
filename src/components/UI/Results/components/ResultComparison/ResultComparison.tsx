@@ -140,7 +140,7 @@ export const ResultComparison = ({
                 color={color}
             />
             <div>
-                {state.simulationData?.selectedSourceObject ? (
+                {/* {state.simulationData?.selectedSourceObject ? (
                     <DownloadResults
                         selectedSimulation={state.selectedSimulation}
                         solveResultId={
@@ -148,7 +148,7 @@ export const ResultComparison = ({
                         }
                         simulationId={state.simulationId}
                     />
-                ) : null}
+                ) : null} */}
                 {index > 0 ? (
                     <IconButton
                         onClick={removeComparison}
