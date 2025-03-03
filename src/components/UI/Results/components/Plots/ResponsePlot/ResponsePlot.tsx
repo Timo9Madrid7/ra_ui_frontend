@@ -145,8 +145,7 @@ export const ResponsePlot = (
                                 
                     </div>
                 </div>
-                <div>
-                    
+                <div>                    
                         <PrimaryButton 
                                 className={classes.bottom_download_btn}
                                 label="Download Plots"                        
