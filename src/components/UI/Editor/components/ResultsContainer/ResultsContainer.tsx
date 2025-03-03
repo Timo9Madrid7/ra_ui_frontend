@@ -22,7 +22,6 @@ import Tab from '@mui/material/Tab';
 
 import {ModelInformation, Simulation} from "@/types";
 import { Download, MusicVideo } from '@mui/icons-material';
-import { SelectOptionsPopup } from './SelectOptionsPopup';
 
 
 
