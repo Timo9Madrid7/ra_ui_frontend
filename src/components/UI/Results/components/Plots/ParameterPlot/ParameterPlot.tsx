@@ -5,7 +5,7 @@ import {createPlotlyDataObjects} from './utils';
 import classes from "../styles.module.scss";
 import {RESULT_PARAMETERS} from "@/constants";
 import {Button} from "@mui/material";
-import {getParameterYPlotRange, useParameterData, useResultsContext} from "@/components";
+import {getParameterYPlotRange, PrimaryButton, useParameterData, useResultsContext} from "@/components";
 import {ParameterPlot as ParameterPlotType} from "@/types";
 import {
     plotlyDefaultConfig,
@@ -13,7 +13,8 @@ import {
     plotlyDefaultTitle,
     getParameterYaxisTitle
 } from "@/components";
-
+import styles from '../styles.module.scss';
+import { SelectOptionsPopup } from '@/components/UI/Editor/components/ResultsContainer/SelectOptionsPopup';
 
 export const ParameterPlot = (
     {
@@ -51,6 +52,9 @@ export const ParameterPlot = (
         setYAxisRange(yAxisRange);
     }, [plotlyData]);
 
+
+    // for download button  
+    const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false);
 
     return (
 
@@ -94,6 +98,14 @@ export const ParameterPlot = (
                     }
                 />
             </div>
+            <PrimaryButton 
+                    className={styles.bottom_download_btn}
+                    label="Download Parameter"
+                    // icon={<Download/>}
+                    onClick={()=>setIsPopupDialogOpen(true)} 
+                    />                            
+
+            {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"param"}/>}
         </div>
     );
 };

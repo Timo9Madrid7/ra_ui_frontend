@@ -4,14 +4,14 @@ import React, {
     useState
 } from 'react';
 import styles from './styles.module.scss';
-import { saveAs } from 'file-saver';
+
 /**
  *
  * Components
  * */
 import {
     Dialog,
-    DefaultButton, SuccessButton
+    DefaultButton
 } from "@/components";
 import {
     DialogContent,
@@ -21,27 +21,17 @@ import {
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 
-import { ClearRounded, Done } from '@mui/icons-material';
-import axios, { AxiosResponse } from 'axios';
+import { ClearRounded } from '@mui/icons-material';
+
 import { SelectParametersOptions } from './SelectParametersOptions';
 import { SelectPlotsOptions } from './SelectPlotsOptions';
 import { SelectAuralizationOptions } from './SelectAuralizationOptions';
 
-import { useResultsContext } from '../../../Results/context/ResultsContext';
 
-export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isPopupDialogOpen: (show: boolean) => void, selectedSimulation: any }) => {
-    
-    const { availableComparisons } = useResultsContext();
-    
-    const formatedSimulation = availableComparisons.map((comparison) => {
-        return {
-            ID : comparison.formState.simulationId,
-            // title: comparison.formState.title,
-        }     
-    })    
-    console.log("simulationID:", formatedSimulation);
-    const simulationID = formatedSimulation.map(sim => sim.ID);
-    // const simulationID = [selectedSimulation.id]
+import { DownloadSelectedOptions } from './DownloadSelectedOptions';
+
+export const SelectOptionsPopup = ({isPopupDialogOpen, isOptions}: { isPopupDialogOpen: (show: boolean) => void, isOptions: any }) => {
+
 // parameters 
     const [checkedParam, setCheckedParam] = useState<string[]>([]);
 
@@ -51,48 +41,6 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
 //Auralization
     const [checkedAur, setCheckedAur] = useState<string[]>([]);
 
-//// Download    
-    const [isFormValid, setIsFormValid] = useState(false); // Disable/Enable Button Logic
-    
-    useEffect(() => {
-        setIsFormValid(checkedParam.length > 0 || checkedPlot.length > 0 || checkedAur.length > 0);
-    }, [checkedParam, checkedPlot, checkedAur]);
-
-    const handleDownloadFiles= async (e: React.MouseEvent) =>{
-       
-        e.preventDefault();
-             
-        const xlsx = ["true"];  
-        const selectedOptions = {
-            xlsx: xlsx,
-            Parameters: checkedParam,
-            EDC: checkedPlot,
-            Auralization: checkedAur,
-            SimulationId: simulationID,
-        };
-        console.log("Selected Parameters:", selectedOptions);
-        
-        try{
-            const response = await axios.post(`exports/custom_export`, selectedOptions, {responseType: 'blob'});
-            downloadFile(response);
-                    
-        } catch(error: any)
-        {
-            if (error.response) {                
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {               
-                console.log(error.request);
-            } else {                
-                console.log('Error', error.message);
-            }          
-        }
-    }
-    const downloadFile = (response:AxiosResponse) => {
-        const blob = new Blob([response.data], { type: 'application/zip' });
-        saveAs(blob, 'SimulationResult.zip');
-    };
 
     return (
         <Dialog
@@ -108,15 +56,20 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
                             <InfoIcon />
                         </IconButton>
                     </Tooltip>
-                    <SelectParametersOptions checkedParam={checkedParam} 
+                    
+                    { (isOptions === 'all' || isOptions == 'param') &&(
+                        <SelectParametersOptions checkedParam={checkedParam} 
                         setCheckedParam={setCheckedParam} />
-
+                    )}
+                    
+                    { (isOptions == 'all') && 
                     <SelectPlotsOptions checkedPlot={checkedPlot} 
                         setCheckedPlot={setCheckedPlot} />
-                        
+                    }
+                    { isOptions == 'all' && 
                     <SelectAuralizationOptions checkedAur = {checkedAur}
                         setCheckedAur = {setCheckedAur}/> 
-
+                    }
                 </DialogContent>
                 <DialogActions>
                     <div>
@@ -127,13 +80,9 @@ export const SelectOptionsPopup = ({isPopupDialogOpen,selectedSimulation}: { isP
                         />
                     </div>
                     <div>
-                        <SuccessButton
-                            label="Download"
-                            type="submit"
-                            icon={<Done/>}
-                            // disabled={!isFormValid}
-                            onClick={(e) => handleDownloadFiles(e)}
-                        />
+                        <DownloadSelectedOptions checkedParam={checkedParam}
+                            checkedPlot={checkedPlot}
+                            checkedAur={checkedAur}/>
                     </div>
                 </DialogActions>
             </form>
