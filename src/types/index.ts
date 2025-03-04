@@ -117,6 +117,8 @@ export interface DESettings {
 export interface SolverSettings {
     dgSettings: DGSettings;
     deSettings: DESettings;
+    // Index signature for any string key with an object value, this enable more methods option
+    [key: string]: { [key: string]: any };
 }
 
 /**
@@ -431,6 +433,11 @@ export interface SimulationParamSetting {
     options?: { [key: string]: string };
     startAdornment?: string;
     endAdornment?: string;
+}
+
+export interface CustomSettingResponse {
+    type: string;
+    options: SimulationParamSetting[];
 }
 
 export interface CustomInputProps {

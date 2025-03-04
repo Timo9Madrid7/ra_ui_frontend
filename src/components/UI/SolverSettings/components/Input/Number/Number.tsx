@@ -70,7 +70,7 @@ export const CustomNumberInput = forwardRef<HTMLInputElement, NumberInputProps>(
                 className={styles.form_control_number}
                 onDoubleClick={onDoubleClick}
             >
-                {name && (<label>{name}</label>)}
+                {name && (<label>{name} - {max}</label>)}
 
                 <div className={`${styles.number_input_container} ${disabled ? styles.disabled : ''}`}>
                     {startAdornment && (<div className={styles.text_info}>{startAdornment}</div>)}

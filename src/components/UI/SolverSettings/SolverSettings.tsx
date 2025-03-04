@@ -64,19 +64,33 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
     const [jsonPopup, setJsonPopup] = useState(false);
     const updateSolverSettings = useUpdateSolverSettings();
 
+    // get the custom setting params json from BE
     const {
         data: customSettingParams,
         isLoading: isCustomSettingParamsLoading,
     } = useSimulationSettingParams(true, taskType as string);
 
+    // formated custom setting json to state
     const [settingsState, setSettingsState] = useState<{ [key: string]: any }>({});
 
+    // setting up the value of the state with the BE value, and if the user previously
+    // changed the value, it will be updated with the user value
+    // settingState will be used in customized params
     useEffect(() => {
-        setSettingsState(customSettingParams?.reduce((acc: { [key: string]: any }, setting: SimulationParamSetting) => {
-            acc[setting.name] = setting.default;
-            return acc;
-        }, {}) || {});
+        if (customSettingParams) {
+            const settingType = customSettingParams.type
+            const prevSetting = selectedSimulation.solverSettings[settingType];
+            setSettingsState(customSettingParams?.options.reduce((acc: { [key: string]: any }, setting: SimulationParamSetting) => {
+                if (prevSetting && prevSetting[setting.name] !== undefined) {
+                    acc[setting.name] = prevSetting[setting.name];
+                } else {
+                    acc[setting.name] = setting.default || undefined;
+                }
+                return acc;
+            }, {}) || {});
+        }
     }, [customSettingParams])
+
     const {
         saveImpulseResponseLength,
         saveEnergyDecayThreshold,
@@ -366,13 +380,16 @@ export const SolverSettings: FC<SolverSettingsProps> = ({selectedSimulation, isI
                                                 setJsonPopup(true);
                                             }}></DefaultButton>
                                         </div>
-                                        {customSettingParams.map((setting: SimulationParamSetting) => (
+                                        {customSettingParams?.options.map((setting: SimulationParamSetting) => (
                                             <CustomInput
                                                 key={setting.name}
                                                 setting={setting}
                                                 value={setting.default}
                                                 onChange={(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-                                                    console.log(e.target.value);
+                                                    setSettingsState({
+                                                        ...settingsState,
+                                                        [setting.name]: e.target.value,
+                                                    })
                                                 }}
                                             />
                                         ))}
