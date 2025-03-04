@@ -1,0 +1,75 @@
+.form_control_number {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  .number_input_container {
+    gap: 5px;
+    height: 25px;
+    display: flex;
+    font-size: 11px;
+    text-align: center;
+    padding: 0 1px 0 5px;
+    border: 1px solid black;
+    justify-content: space-between;
+
+    &.disabled {
+      pointer-events: none;
+      opacity: 0.3;
+    }
+
+    &:hover {
+      border-color: #9011cc;
+    }
+
+    .text_info {
+      margin: auto;
+    }
+
+    .number_input {
+      width: 30px;
+      border: none;
+      outline: none;
+      font-size: 10px;
+      text-align: center;
+      font-family: inherit;
+      background: transparent;
+
+      &[disabled] {
+        pointer-events: none;
+        color: #8c8c8c;
+      }
+      &::-webkit-inner-spin-button{
+        -webkit-appearance: none;
+      }
+    }
+
+    &:hover .steps {
+      opacity: 0.5;
+      transition: 0.5s opacity;
+    }
+
+    .steps {
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      &:hover {
+        opacity: 1;
+      }
+
+      .svg {
+        display: flex;
+        cursor: pointer;
+
+        svg {
+          width: 0.7rem;
+          height: 0.7rem;
+        }
+      }
+
+    }
+  }
+}

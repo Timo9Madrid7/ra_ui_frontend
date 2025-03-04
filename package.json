@@ -44,6 +44,7 @@
     "file-saver": "^2.0.5",
     "javascript-color-gradient": "^2.4.4",
     "json-bigint": "^1.0.0",
+    "json-edit-react": "^1.23.1",
     "jszip": "^3.10.1",
     "kdbush": "^4.0.2",
     "localforage": "^1.10.0",

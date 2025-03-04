@@ -117,6 +117,8 @@ export interface DESettings {
 export interface SolverSettings {
     dgSettings: DGSettings;
     deSettings: DESettings;
+    // Index signature for any string key with an object value, this enable more methods option
+    [key: string]: { [key: string]: any };
 }
 
 /**
@@ -410,4 +412,36 @@ export type AnechoicOption = {
     isUserFile: boolean;
     name: string;
     updatedAt: string;
+}
+
+export type SimulationSettingOption = {
+    simulationType: string;
+    label: string;
+    description: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface SimulationParamSetting {
+    default: any;
+    display: string;
+    max?: number | null;
+    min?: number | null;
+    name: string;
+    step?: number;
+    type: string;
+    options?: { [key: string]: string };
+    startAdornment?: string;
+    endAdornment?: string;
+}
+
+export interface CustomSettingResponse {
+    type: string;
+    options: SimulationParamSetting[];
+}
+
+export interface CustomInputProps {
+    setting: SimulationParamSetting;
+    value: any;
+    onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
 }
