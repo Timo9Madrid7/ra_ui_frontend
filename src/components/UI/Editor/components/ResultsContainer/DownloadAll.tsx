@@ -11,7 +11,7 @@ export const DownloadAll = () => {
 
     const parameters = ['edt', 't20', 't30', 'c80', 'd50', 'ts', 'spl_t0_freq' ]
     const plots = ['125Hz', '250Hz', '500Hz', '1000Hz', '2000Hz'] 
-    const aur = ['wav','wavIR', 'csvIR']
+    const aur = ['wavIR', 'csvIR']
     const xlsx = ["true"];  
     const { availableComparisons } = useResultsContext();
     const handleDownloadAllFiles= async (e: React.MouseEvent) =>{
