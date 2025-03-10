@@ -82,7 +82,7 @@ export const ResultsContainer: FC<ResultsContainerProps> = ({
             >
                 <Tab icon={<BarChartOutlinedIcon />} label='Parameters' />
                 <Tab icon={<InsightsIcon />} label='Plots' />
-                <Tab icon={<MusicNote />} label='Auralization' />
+                <Tab icon={<MusicNote />} label='Convolved Sound' />
             </Tabs>
 
             <ParameterPlot value={selectedResultTab} index={0} />
