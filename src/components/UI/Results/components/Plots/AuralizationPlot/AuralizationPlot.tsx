@@ -95,16 +95,16 @@ export const AuralizationPlot = ({
 
     return (
         <div style={{display: value === index ? 'block' : 'none', width: "100%"}}>
-            <div style={ {  display: "block",
+            {/* <div style={ {  display: "block",
                 width: "100%" }}>
                 <div style={{                    
                         width: "100%",
-                        }}>
+                        }}> */}
                     <div className={classes.plot_container}>            
                         <h2 className={classes.plot_header}>Impulse Response</h2>
                         {impulseURL && <ImpulseResponse impulseURL={impulseURL} />}
                         <List>
-                            <h2 className={classes.plot_header}>Auralization</h2>
+                            <h2 className={classes.plot_header}>Convolved Sound</h2>
                             {isLoadingAudioOptions ? (
                                 <CircularProgress size={24} />
                             ) : (
@@ -143,21 +143,21 @@ export const AuralizationPlot = ({
                             )}
                         </List>
                     </div>
-                </div>
-                <div>                    
+                {/* </div> */}
+                {/* <div>                    
                     <PrimaryButton 
                             className={classes.bottom_download_btn}
-                            label="Download Auralization"                        
+                            label="Download Convolved Audio"                        
                             // icon={<Download/>}
                             onClick={()=>setIsPopupDialogOpen(true)} 
                             />                            
 
                     {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"aur"}/>}
                       
-                </div>
+                </div> */}
             </div>
             
            
-        </div>
+        // </div>
     );
 };

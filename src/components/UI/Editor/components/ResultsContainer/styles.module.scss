@@ -15,14 +15,14 @@
     margin-left: 0;
   }
 
-  .download_btn{
-    width: auto;
-    border: 1px solid rgb(240, 137, 20);
-    background-color: rgb(240, 137, 20);    
-    color: white;
-    align-self: flex-start;
-    margin-left: 5%;
-  }
+  // .download_btn{
+  //   width: auto;
+  //   border: 1px solid rgb(240, 137, 20);
+  //   background-color: rgb(240, 137, 20);    
+  //   color: white;
+  //   align-self: flex-start;
+  //   margin-left: 5%;
+  // }
 
   
 
@@ -72,4 +72,19 @@
 .info_btn{
   display: grid;
   float: right;
+}
+.download_btn{
+  width: auto;
+  border: 1px solid rgb(240, 137, 20);
+ background-color: rgb(240, 137, 20);    
+  color: white;
+  align-self: flex-start;
+  margin-left: 2%;
+  display: flex;
+  position: absolute;
+  float: left;
+}
+.download_btn:hover{
+  background-color: rgb(240, 137, 20);
+  color: white;
 }

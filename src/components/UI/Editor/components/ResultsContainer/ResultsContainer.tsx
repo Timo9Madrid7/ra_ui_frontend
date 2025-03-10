@@ -73,14 +73,14 @@ export const ResultsContainer: FC<ResultsContainerProps> = ({
 
             {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"all"}/>}
 
-            <Tabs
+            <Tabs 
                 value={selectedResultTab}
                 variant='fullWidth'
                 // @ts-expect-error: we won't use event data
                 onChange={(e, value) => setSelectedResultTab(value)}
                 aria-label='icon label tabs example'
             >
-                <Tab icon={<BarChartOutlinedIcon />} label='Parameters' />
+                <Tab icon={<BarChartOutlinedIcon />} label='Parameters'/>
                 <Tab icon={<InsightsIcon />} label='Plots' />
                 <Tab icon={<MusicNote />} label='Auralization' />
             </Tabs>

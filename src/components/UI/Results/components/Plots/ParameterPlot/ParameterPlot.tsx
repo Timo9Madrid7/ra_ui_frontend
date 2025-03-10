@@ -58,10 +58,10 @@ export const ParameterPlot = (
 
     return (
         <div style={{display: value === index ? 'block' : 'none', width: "100%"}}> 
-            <div style={{         
+            {/* <div style={{         
                     display: "block",
                     width: "100%"
-                    }}>
+                    }}> */}
                 <div style={{                    
                     width: "100%",
                     }}>
@@ -84,11 +84,12 @@ export const ParameterPlot = (
                                 ))}
                             </div>
                         </div>
-                        <div className={classes.plot}>
+                        
+                        <div className={classes.plot} style={{ position: "relative" }}>
                             <Plot
                                 data={plotlyData}
                                 config={plotlyDefaultConfig}
-                                style={{height: '100%', width: '100%'}}
+                                // style={{height: '100%', width: '100%'}}
                                 useResizeHandler={true}
                                 layout={
                                     {
@@ -104,20 +105,75 @@ export const ParameterPlot = (
                                     }
                                 }
                             />
-                        </div>                                                
+                            {/* <div style={{display: "flex", justifyContent: "center"}}> */}
+                            <PrimaryButton 
+                            style={{
+                                position: "absolute",
+                                left: "60%",
+                                backgroundColor: "rgb(240, 137, 20)",
+                                color: "white",
+                                border: "1px solid rgb(240, 137, 20)",
+                                borderRadius: "5px",
+                                cursor: "pointer",
+                                marginTop: "95%",
+                            }}
+                                className={styles.bottom_download_btn}
+                                label="Download Parameter"
+                                // icon={<Download/>}
+                                onClick={()=>setIsPopupDialogOpen(true)} 
+                                /> 
+                            {/* </div> */}
+                            {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"param"}/>}   
+                        </div>      
+                                                 
                     </div>
                 </div>
-                <div>                   
-                    <PrimaryButton 
-                            className={styles.bottom_download_btn}
-                            label="Download Parameter"
-                            // icon={<Download/>}
-                            onClick={()=>setIsPopupDialogOpen(true)} 
-                            />                            
+                {/* <div>                   
+                                             
                     {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"param"}/>}                    
-                </div>                
-            </div>
+                </div>                 */}
+             {/* </div> */}
         </div>
-       
+        // <div className={classes.plot_container} style={{display: value === index ? 'block' : 'none'}}>
+        //     <div>
+        //         <div className={classes.plot_header}>
+        //             <>
+        //                 Select parameter
+        //             </>
+        //         </div>
+        //         <div className={classes.plot_actions}>
+        //             {RESULT_PARAMETERS.map((parameter) => (
+        //                 <Button
+        //                     key={parameter}
+        //                     variant={'outlined'}
+        //                     color={parameter === selectedParameter ? 'error' : 'secondary'}
+        //                     onClick={() => setSelectedParameter(parameter)}>
+        //                     {parameter}
+        //                 </Button>
+        //             ))}
+        //         </div>
+        //     </div>
+        //     <div className={classes.plot}>
+        //         <Plot
+        //             data={plotlyData}
+        //             config={plotlyDefaultConfig}
+        //             style={{height: '100%', width: '100%'}}
+        //             useResizeHandler={true}
+        //             layout={
+        //                 {
+        //                     ...plotlyDefaultLayout,
+        //                     yaxis: {
+        //                         ...plotlyDefaultLayout.yaxis,
+        //                         range: yAxisRange,
+        //                         title: {
+        //                             ...plotlyDefaultTitle,
+        //                             text: getParameterYaxisTitle(selectedParameter),
+        //                         }
+        //                     },
+        //                 }
+        //             }
+        //         />
+        //     </div>
+        // </div>
     );
 };
