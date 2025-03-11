@@ -66,19 +66,15 @@ export const ResponsePlot = (
     // for download button  
     const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false);
 
-
+    // find the resolution of user screen
+    const resolutionWidth = window.screen.width * 0.3;
+    const resolutionHeight = window.screen.height * 0.4;
     return (
         <div style={{display: value === index ? 'block' : 'none', width: "100%"}}> 
-            <div style={{
-                // height: "800px",               
-                display: "block",
-                width: "100%"
-                }}>
-                <div style={{
-                    // height: "600px",
-                    width: "100%",
-                    }}>
-                    <div className={classes.plot_container} >
+            <div style={{ width: "100%"}}>
+               
+                <div className={classes.plot_container} >
+                    <div>
                         <div className={classes.plot_header}>
                             <span>Select type</span>
                             {selectedPlotType === 'EDC' && (
@@ -127,35 +123,44 @@ export const ResponsePlot = (
                                     {response}
                                 </Button>
                             ))}
-                        </div>            
-                        <div className={classes.plot}>
-                            <Plot
-                                data={responsePlotData}
-                                config={{
-                                    modeBarButtonsToRemove: ['resetScale2d'],
-                                    displaylogo: false,
-                                    doubleClick: 'autosize',
-                                    responsive: true,
-                                }}
-                                style={{height: '100%', width: '100%'}}
-                                useResizeHandler={true}
-                                layout={getPlotLayoutConfig(selectedPlotType,)}
-                            />                                        
                         </div>   
-                                
                     </div>
-                </div>
-                <div>                    
+                             
+                    <div className={classes.plot} style={{ position: "relative", flex:1, }}>
+                        <Plot
+                            data={responsePlotData}
+                            style = {
+                                {width: resolutionWidth,
+                                height: resolutionHeight}
+                            }
+                            config={{
+                                modeBarButtonsToRemove: ['resetScale2d'],
+                                displaylogo: false,
+                                doubleClick: 'autosize',
+                                responsive: true,
+                            }}
+                        
+                            useResizeHandler={true}
+                            layout={
+                                getPlotLayoutConfig(selectedPlotType)}
+                        />    
+                                                                                                     
+                    </div>   
+                    <div style={{ display: "flex", flexDirection: "column"}}>
                         <PrimaryButton 
+                            style={{
+                                position: "absolute",                                                                       
+                                alignSelf: "flex-end",                                    
+                                border: "1px solid #2e7d32",
+                            }}
                                 className={classes.bottom_download_btn}
-                                label="Download Plots"                        
+                                label="Download Plots"
                                 // icon={<Download/>}
                                 onClick={()=>setIsPopupDialogOpen(true)} 
-                                />                            
-
-                        {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"plot"}/>}
-                      
-                </div>
+                        /> 
+                        {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"plot"}/>} 
+                    </div>                            
+                </div>                                
             </div>            
         </div>
     );

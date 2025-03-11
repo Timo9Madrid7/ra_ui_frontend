@@ -56,15 +56,13 @@ export const ParameterPlot = (
     // for download button  
     const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false);
 
+     // find the resolution of user screen
+     const resolutionWidth = window.screen.width * 0.3;
+     const resolutionHeight = window.screen.height * 0.4;
+
     return (
         <div style={{display: value === index ? 'block' : 'none', width: "100%"}}> 
-            {/* <div style={{         
-                    display: "block",
-                    width: "100%"
-                    }}> */}
-                <div style={{                    
-                    width: "100%",
-                    }}>
+                <div style={{  width: "100%" }}>
                     <div className={classes.plot_container}>
                         <div>
                             <div className={classes.plot_header}>
@@ -85,11 +83,15 @@ export const ParameterPlot = (
                             </div>
                         </div>
                         
-                        <div className={classes.plot} style={{ position: "relative" }}>
+                        <div className={classes.plot}                             
+                            style={{
+                                flex: 2,                            
+                                position: 'relative',
+                            }}>
                             <Plot
                                 data={plotlyData}
                                 config={plotlyDefaultConfig}
-                                // style={{height: '100%', width: '100%'}}
+                                style={{minWidth: '50%'}}
                                 useResizeHandler={true}
                                 layout={
                                     {
@@ -102,78 +104,29 @@ export const ParameterPlot = (
                                                 text: getParameterYaxisTitle(selectedParameter),
                                             }
                                         },
+                                        width: resolutionWidth,
+                                        height: resolutionHeight,
                                     }
                                 }
-                            />
-                            {/* <div style={{display: "flex", justifyContent: "center"}}> */}
-                            <PrimaryButton 
-                            style={{
-                                position: "absolute",
-                                left: "60%",
-                                backgroundColor: "rgb(240, 137, 20)",
-                                color: "white",
-                                border: "1px solid rgb(240, 137, 20)",
-                                borderRadius: "5px",
-                                cursor: "pointer",
-                                marginTop: "95%",
-                            }}
-                                className={styles.bottom_download_btn}
-                                label="Download Parameter"
-                                // icon={<Download/>}
-                                onClick={()=>setIsPopupDialogOpen(true)} 
-                                /> 
-                            {/* </div> */}
-                            {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"param"}/>}   
-                        </div>      
-                                                 
+                            />                            
+                    </div>      
+                    <div style={{ display: "flex", flexDirection: "column"}}>                        
+                        <PrimaryButton 
+                                style={{
+                                    position: "absolute",                                                                       
+                                    alignSelf: "flex-end",                                    
+                                    border: "1px solid #2e7d32",                                                             
+                                }}
+                                    className={styles.bottom_download_btn}
+                                    label="Download Parameter"
+                                    // icon={<Download/>}
+                                    onClick={()=>setIsPopupDialogOpen(true)} 
+                                    />                                
+                        {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"param"}/>}           
                     </div>
+                                    
+                    </div>                    
                 </div>
-                {/* <div>                   
-                                             
-                    {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"param"}/>}                    
-                </div>                 */}
-             {/* </div> */}
-        </div>
-        // <div className={classes.plot_container} style={{display: value === index ? 'block' : 'none'}}>
-        //     <div>
-        //         <div className={classes.plot_header}>
-        //             <>
-        //                 Select parameter
-        //             </>
-        //         </div>
-        //         <div className={classes.plot_actions}>
-        //             {RESULT_PARAMETERS.map((parameter) => (
-        //                 <Button
-        //                     key={parameter}
-        //                     variant={'outlined'}
-        //                     color={parameter === selectedParameter ? 'error' : 'secondary'}
-        //                     onClick={() => setSelectedParameter(parameter)}>
-        //                     {parameter}
-        //                 </Button>
-        //             ))}
-        //         </div>
-        //     </div>
-        //     <div className={classes.plot}>
-        //         <Plot
-        //             data={plotlyData}
-        //             config={plotlyDefaultConfig}
-        //             style={{height: '100%', width: '100%'}}
-        //             useResizeHandler={true}
-        //             layout={
-        //                 {
-        //                     ...plotlyDefaultLayout,
-        //                     yaxis: {
-        //                         ...plotlyDefaultLayout.yaxis,
-        //                         range: yAxisRange,
-        //                         title: {
-        //                             ...plotlyDefaultTitle,
-        //                             text: getParameterYaxisTitle(selectedParameter),
-        //                         }
-        //                     },
-        //                 }
-        //             }
-        //         />
-        //     </div>
-        // </div>
+        </div>        
     );
 };

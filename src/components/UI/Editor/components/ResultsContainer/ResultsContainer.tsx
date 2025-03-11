@@ -23,6 +23,7 @@ import Tab from '@mui/material/Tab';
 import {ModelInformation, Simulation} from "@/types";
 import { Download, MusicVideo } from '@mui/icons-material';
 import { SelectOptionsPopup } from './SelectOptionsPopup';
+import { green } from '@mui/material/colors';
 
 
 
@@ -44,16 +45,6 @@ export const ResultsContainer: FC<ResultsContainerProps> = ({
     // for download button  
     const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false);
 
-    // Function to open the pop-up
-    // const handleOpenPopupDialog = () => {
-    //     setIsPopupDialogOpen(true);
-    // };
-
-    // // Function to close the pop-up (pass to the popup component)
-    // const handleClosePopupDialog = () => {
-    //     setIsPopupDialogOpen(false);
-    // };
-
     useEffect(() => {
         setActive(true);
     }, []);
@@ -64,40 +55,68 @@ export const ResultsContainer: FC<ResultsContainerProps> = ({
                 active ? styles.active : ''
             }`}
         >
-            {/* for download button  */}
-            <PrimaryButton 
-                    className={styles.download_btn}
-                    label="Download"
-                    icon={<Download/>}
-                    onClick={()=>setIsPopupDialogOpen(true)} />                            
+            <div style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column'
+                    }}>
+                <div style={{ 
+                        flex: 1,
+                        display: 'flex',                        
+                        flexDirection: 'row',                    
+                    }}>
+                    {/* for download button (top download button)  */}
+                    <PrimaryButton 
+                        className={styles.download_btn}
+                        label="Download"
+                        icon={<Download/>}
+                        onClick={()=>setIsPopupDialogOpen(true)} />                            
 
-            {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"all"}/>}
+                    {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"all"}/>}
+                </div>
+                <div style={{  
+                        flex: 3,
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center'
+                         }}>
+                    <Tabs 
+                        value={selectedResultTab}
+                        variant='fullWidth'
+                        // @ts-expect-error: we won't use event data
+                        onChange={(e, value) => setSelectedResultTab(value)}
+                        aria-label='icon label tabs example'
+                    >
+                        <Tab icon={<BarChartOutlinedIcon />} label='Parameters'/>
+                        <Tab icon={<InsightsIcon />} label='Plots' />
+                        <Tab icon={<MusicNote />} label='Auralization' />
+                    </Tabs>
+                </div>
+            </div>
+            
+            <div style={
+                { 
+                    flex: 10,                    
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',                 
+                }
+            }>
+                <ParameterPlot value={selectedResultTab} index={0} />
 
-            <Tabs 
-                value={selectedResultTab}
-                variant='fullWidth'
-                // @ts-expect-error: we won't use event data
-                onChange={(e, value) => setSelectedResultTab(value)}
-                aria-label='icon label tabs example'
-            >
-                <Tab icon={<BarChartOutlinedIcon />} label='Parameters'/>
-                <Tab icon={<InsightsIcon />} label='Plots' />
-                <Tab icon={<MusicNote />} label='Auralization' />
-            </Tabs>
+                <ResponsePlot value={selectedResultTab} index={1} />
 
-            <ParameterPlot value={selectedResultTab} index={0} />
+                <AuralizationPlot value={selectedResultTab} index={2} />
 
-            <ResponsePlot value={selectedResultTab} index={1} />
+                {showResults && modelInformation && selectedSimulation && (
+                    <ResultsComparisonsPanel
+                        key={selectedSimulation.id}
+                        originalModelInformation={modelInformation}
+                        selectedSimulation={selectedSimulation}
+                    />
+                )}
 
-            <AuralizationPlot value={selectedResultTab} index={2} />
-
-            {showResults && modelInformation && selectedSimulation && (
-                <ResultsComparisonsPanel
-                    key={selectedSimulation.id}
-                    originalModelInformation={modelInformation}
-                    selectedSimulation={selectedSimulation}
-                />
-            )}
+            </div> 
         </div>
     );
 };
