@@ -1,13 +1,13 @@
-import React from "react";
-import {PresetEnum} from "@/enums";
+import React, { Dispatch, SetStateAction } from 'react';
+import { PresetEnum } from '@/enums';
 
 /**
  * A base interface that contains id and timestamps
  * */
 export interface Base {
     id: number;
-    createdAt: string,
-    updatedAt: string
+    createdAt: string;
+    updatedAt: string;
 }
 
 /**
@@ -24,8 +24,7 @@ export interface NewMaterial {
 /**
  * Material is the base and new material combination
  * */
-export interface Material extends Base, NewMaterial {
-}
+export interface Material extends Base, NewMaterial {}
 
 /**
  * Material grouped by their category
@@ -66,7 +65,7 @@ export interface NewModel {
  * */
 export interface Model extends Base, NewModel {
     outputFileId: string;
-    hasGeo: boolean
+    hasGeo: boolean;
 }
 
 /**
@@ -76,7 +75,7 @@ export interface Action {
     key: string;
     value: string;
     title?: string;
-    disabled?: boolean,
+    disabled?: boolean;
     icon?: React.ReactElement;
     onClick: (() => void) | (() => Promise<void>);
 }
@@ -85,8 +84,8 @@ export interface Action {
  * A mesh is a finite volume element object
  * */
 export interface Mesh extends Base {
-    taskId: number,
-    task: Task
+    taskId: number;
+    task: Task;
 }
 
 /**
@@ -127,9 +126,8 @@ export interface SolverSettings {
  * [GUID: material_id]
  * */
 export interface LayerIdByMaterialId {
-    [key: string]: string
+    [key: string]: string;
 }
-
 
 /**
  * NewSimulation interface: if you want to create a new simulation,
@@ -161,8 +159,7 @@ export interface Source {
  * Receiver interface: sound receiver
  *
  * */
-export interface Receiver extends Source {
-}
+export interface Receiver extends Source {}
 
 /**
  * A simulation is an object that represent the settings that is needed for simulation
@@ -173,22 +170,22 @@ export interface Simulation extends Base, NewSimulation {
     receivers: Receiver[];
     settingsPreset: PresetEnum;
     taskType: string | null;
-    meshId: string | null,
+    meshId: string | null;
     hasBeenEdited: boolean | null;
     simulationRunId: number | null;
     simulationRun?: SimulationRun | null;
-    completedAt: string
+    completedAt: string;
 }
 
 // TODO: do the same for all of the types
 export interface resultParametersForReceivers {
-    t20: Array<number>,
-    t30: Array<number>,
-    ts: Array<number>,
-    d50: Array<number>,
-    edt: Array<number>,
-    c80: Array<number>,
-    spl_t0_freq: Array<number>,
+    t20: Array<number>;
+    t30: Array<number>;
+    ts: Array<number>;
+    d50: Array<number>;
+    edt: Array<number>;
+    c80: Array<number>;
+    spl_t0_freq: Array<number>;
 }
 export interface receiverDetails {
     label: string;
@@ -227,7 +224,6 @@ export type SourceStatus = {
     orderNumber: number;
 };
 
-
 /**
  * Enum to handle status of a simulation
  * */
@@ -250,15 +246,12 @@ export type TaskRunStatus =
     | 'Cancelled'
     | 'Error';
 
-
 export type SelectType = {
-    id: string,
-    name: string
-}
-
+    id: string;
+    name: string;
+};
 
 export type TaskType = 'BOTH' | 'DG' | 'DE' | 'Mesh';
-
 
 export type Task = {
     id: string;
@@ -287,7 +280,6 @@ export type RunStatus =
     | 'TaskError'
     | 'ProcessingResults';
 
-
 export type SimulationRunStatus = {
     id: string;
     status: RunStatus | null;
@@ -307,7 +299,6 @@ export type SimulationRunStatus = {
 };
 
 export type SolveTask = SourceResults[];
-
 
 export type SourceResults = {
     id: string;
@@ -330,7 +321,6 @@ export enum ResultType {
     BOTH = 'BOTH',
     Mesh = 'Mesh',
 }
-
 
 export type TaskResultForReceiver = {
     id: string;
@@ -356,7 +346,6 @@ export type ReceiverResults = {
     uploadLinkExpires: string;
 };
 
-
 export type ModelInformation = {
     id: string;
     projectId: string;
@@ -366,9 +355,8 @@ export type ModelInformation = {
     modelUploadId: number;
     modelUrl: string;
     simulationCount: number;
-    hasGeo: boolean
+    hasGeo: boolean;
 };
-
 
 export type TaskStatus = {
     taskId: string;
@@ -383,7 +371,6 @@ export type TaskStatus = {
     runtimeSeconds: number;
     sourcePointId: string;
 };
-
 
 export type MaterialLayer = {
     name: string;
@@ -412,7 +399,7 @@ export type AnechoicOption = {
     isUserFile: boolean;
     name: string;
     updatedAt: string;
-}
+};
 
 export type SimulationSettingOption = {
     simulationType: string;
@@ -420,7 +407,7 @@ export type SimulationSettingOption = {
     description: string;
     createdAt: string;
     updatedAt: string;
-}
+};
 
 export interface SimulationParamSetting {
     default: any;
@@ -443,5 +430,6 @@ export interface CustomSettingResponse {
 export interface CustomInputProps {
     setting: SimulationParamSetting;
     value: any;
-    onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+    settingState: { [key: string]: any };
+    setSettingsState: Dispatch<SetStateAction<{ [key: string]: any }>>;
 }
