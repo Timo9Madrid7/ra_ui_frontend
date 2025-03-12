@@ -42,6 +42,7 @@ import { SelectAutoComplete } from '@/components/Base/Select/SelectAutoComplete'
 import { useSimulationSettingOptions } from './hooks/useSimulationSettingOptions';
 import CustomInput from './components/CustomInput';
 import { JSONEditor } from './components/JSONEditor';
+import { format } from 'path/posix';
 
 export const SolverSettings: FC<SolverSettingsProps> = ({
     selectedSimulation,
@@ -68,6 +69,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
         number | undefined
     >();
     const [taskType, setTaskType] = useState(selectedSimulation.taskType);
+
     const [energyDecayThreshold, setEnergyDecayThreshold] = useState<
         number | null
     >(dgSettings?.energyDecayThreshold);
@@ -243,6 +245,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
     const { formattedSimulationSettingOptions } = useSimulationSettingOptions(
         !isStaticRender
     );
+
     const AvailabelMethodSelector: (
         isStaticRender: boolean
     ) => JSX.Element | null = (isStaticRender) => {
@@ -281,11 +284,10 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
                 <SelectAutoComplete
                     options={formattedSimulationSettingOptions()}
                     label='Available Methods'
-                    isOptionEqualToValue={(option, value) =>
-                        option.id === (value as { id: number }).id
-                    }
+                    isOptionEqualToValue={(option, value) => {
+                        return option.id === value.id;
+                    }}
                     onChange={(_, value) => {
-                        console.log(value, ' value ');
                         if (value) {
                             triggerSetTaskType(value.id.toString());
                         }

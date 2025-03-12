@@ -68,7 +68,6 @@ export const CustomNumberInput = ({
     };
 
     const validateValue = (value: number) => {
-        console.log(value, min, max);
         if (min !== undefined && min !== null && value < min) {
             toast.error(`Minimum value for ${name} is ${min}`);
             return min;
@@ -82,11 +81,7 @@ export const CustomNumberInput = ({
 
     return (
         <div className={styles.form_control_number}>
-            {name && (
-                <label>
-                    {name} - {settingState[name]}
-                </label>
-            )}
+            {name && <label>{name}</label>}
 
             <div
                 className={`${styles.number_input_container} ${
