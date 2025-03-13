@@ -93,6 +93,39 @@ export const AuralizationPlot = ({
     // for download button  
     const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false);
 
+    // for upload button
+    const [file, setFile] = useState<File | null>(null);
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const uploadedFile = event.target.files ? event.target.files[0] : null;
+        if (!uploadedFile) return;
+
+        setFile(uploadedFile)
+        
+        const formData = new FormData();
+        formData.append("file", uploadedFile);
+        formData.append("name", uploadedFile.name);
+        formData.append("description", 'description of the file');
+        formData.append("extension", uploadedFile.name.split('.').pop() || '');
+        formData.append("simulation_id", simulationId);
+
+        try {
+            const response = await fetch('http://127.0.0.1:5001/auralizations/upload/audiofile', {
+                method: 'POST',
+                body: formData,
+              });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error('Upload failed: ${response.statusText}');
+            }else{
+                console.log("File uploaded successfully:", result);
+            }
+        }catch (error) {
+        console.error(error);
+      }
+    };
+
     return (
         <div style={{display: value === index ? 'block' : 'none', width: "100%"}}>
             <div style={ {  display: "block",
@@ -144,7 +177,24 @@ export const AuralizationPlot = ({
                         </List>
                     </div>
                 </div>
-                <div>                    
+
+                <div style={{ position: 'absolute', bottom: '70px', left: '10px' }}>
+                    <input
+                        type="file"
+                        id="file-upload"
+                        style={{ display: 'none' }}
+                        onChange={handleFileUpload}
+                    />
+                    <label htmlFor="file-upload">
+                        <PrimaryButton
+                            className={classes.bottom_upload_btn}
+                            label="Upload Audio"
+                            onClick={() => document.getElementById('file-upload')?.click()}
+                        />
+                    </label>
+                </div>
+
+                <div>                       
                     <PrimaryButton 
                             className={classes.bottom_download_btn}
                             label="Download Convolved Audio"                        
@@ -152,9 +202,10 @@ export const AuralizationPlot = ({
                             onClick={()=>setIsPopupDialogOpen(true)} 
                             />                            
 
-                    {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"aur"}/>}
-                      
+                    {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"aur"}/>}      
                 </div>
+
+                
             </div>
             
            
