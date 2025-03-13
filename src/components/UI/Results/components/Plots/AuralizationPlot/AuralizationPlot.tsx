@@ -95,11 +95,7 @@ export const AuralizationPlot = ({
 
     return (
         <div style={{display: value === index ? 'block' : 'none', width: "100%"}}>
-            <div style={ {  display: "block",
-                width: "100%" }}>
-                <div style={{                    
-                        width: "100%",
-                        }}>
+                <div style={{ width: "100%" }}>
                     <div className={classes.plot_container}>            
                         <h2 className={classes.plot_header}>Impulse Response</h2>
                         {impulseURL && <ImpulseResponse impulseURL={impulseURL} />}
@@ -155,9 +151,6 @@ export const AuralizationPlot = ({
                     {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"aur"}/>}
                       
                 </div>
-            </div>
-            
-           
-        </div>
+            </div>            
     );
 };
