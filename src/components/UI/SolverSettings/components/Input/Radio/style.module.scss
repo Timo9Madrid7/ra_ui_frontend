@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+}
+
+.label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.option-list {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 10px; /* Add gap between items */
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    width: auto; /* Ensure the option does not take up 100% width */
+    margin: 5px 0;
+}
+
+.option input {
+    margin-right: 5px;
+}

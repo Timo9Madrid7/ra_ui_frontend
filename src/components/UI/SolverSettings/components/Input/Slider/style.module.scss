@@ -1,0 +1,25 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    margin-bottom: 5px;
+    text-align: left; /* Ensure the label is aligned to the left */
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.slider {
+    flex: 1;
+    width: 100%; /* Adjust the max-width to make the slider shorter */
+}
+
+.value {
+    min-width: 50px;
+    text-align: center;
+}
