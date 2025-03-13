@@ -66,6 +66,7 @@
     "react-multi-email": "^1.0.21",
     "react-plotly.js": "^2.6.0",
     "react-plotlyjs": "^0.4.4",
+    "react-query": "^3.39.3",
     "react-router-dom": "^6.22.1",
     "react-virtualized-auto-sizer": "^1.0.24",
     "rhino3dm": "^8.0.1",

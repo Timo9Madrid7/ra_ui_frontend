@@ -408,9 +408,11 @@ export type HiddenLayer = {
 export type AnechoicOption = {
     createdAt: string;
     description: string;
+    fileExtension: string;
     id: number;
     isUserFile: boolean;
     name: string;
+    projectId: number;
     updatedAt: string;
 }
 

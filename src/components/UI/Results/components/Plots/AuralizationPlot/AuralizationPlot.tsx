@@ -1,4 +1,6 @@
 import ReactAudioPlayer from 'react-audio-player';
+import axios from '@/client';
+import { useQueryClient } from '@tanstack/react-query';
 import {
     Avatar,
     IconButton,
@@ -10,6 +12,7 @@ import {
 } from '@mui/material';
 import classes from '../styles.module.scss';
 import { useLocation } from 'react-router-dom';
+
 
 /** Components */
 import { SelectAutoComplete } from '@/components/Base/Select/SelectAutoComplete';
@@ -24,6 +27,7 @@ import {
 } from '@/components';
 import { useState } from 'react';
 import { SelectOptionsPopup } from '@/components/UI/Editor/components/ResultsContainer/SelectOptionsPopup';
+import { AnechoicOption } from '@/types';
 
 export const AuralizationPlot = ({
     value,
@@ -32,6 +36,7 @@ export const AuralizationPlot = ({
     value: number;
     index: number;
 }) => {
+    const queryClient = useQueryClient();
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const simulationId = queryParams.get('simulationId') || '';
@@ -97,29 +102,28 @@ export const AuralizationPlot = ({
     const [file, setFile] = useState<File | null>(null);
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const uploadedFile = event.target.files ? event.target.files[0] : null;
+        
         if (!uploadedFile) return;
 
         setFile(uploadedFile)
         
         const formData = new FormData();
         formData.append("file", uploadedFile);
-        formData.append("name", uploadedFile.name);
+        formData.append("name", uploadedFile.name.split('.').shift() || '');
         formData.append("description", 'description of the file');
         formData.append("extension", uploadedFile.name.split('.').pop() || '');
         formData.append("simulation_id", simulationId);
 
         try {
-            const response = await fetch('http://127.0.0.1:5001/auralizations/upload/audiofile', {
-                method: 'POST',
-                body: formData,
-              });
+            const response = await axios.post('/auralizations/upload/audiofile', formData, {headers: { "Content-Type": "multipart/form-data" }});
+            const result = response.data;
 
-            const result = await response.json();
-
-            if (!response.ok) {
-                throw new Error('Upload failed: ${response.statusText}');
+            if (response.status == 200) {
+                const newAudioOption = result;
+                queryClient.setQueryData(['anechoic'], (oldData: AnechoicOption[] | undefined) => oldData ? [...oldData, newAudioOption] : [newAudioOption]);
+                console.log('File uploaded successfully:', result);
             }else{
-                console.log("File uploaded successfully:", result);
+                throw new Error(`Upload failed: ${response.statusText}`);
             }
         }catch (error) {
         console.error(error);
