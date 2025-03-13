@@ -142,6 +142,21 @@ export const AuralizationPlot = ({
                         {impulseURL && <ImpulseResponse impulseURL={impulseURL} />}
                         <List>
                             <h2 className={classes.plot_header}>Convolved Sound</h2>
+                            <div style={{ marginLeft: '80%' }}>
+                                <input
+                                    type="file"
+                                    id="file-upload"
+                                    style={{ display: 'none' }}
+                                    onChange={handleFileUpload}
+                                />
+                                <label htmlFor="file-upload">
+                                    <PrimaryButton
+                                        className={classes.bottom_upload_btn}
+                                        label="Upload Audio"
+                                        onClick={() => document.getElementById('file-upload')?.click()}
+                                    />
+                                </label>
+                            </div>
                             {isLoadingAudioOptions ? (
                                 <CircularProgress size={24} />
                             ) : (
@@ -179,23 +194,8 @@ export const AuralizationPlot = ({
                                 </ListItem>
                             )}
                         </List>
+                        
                     </div>
-                </div>
-
-                <div style={{ position: 'absolute', bottom: '70px', left: '10px' }}>
-                    <input
-                        type="file"
-                        id="file-upload"
-                        style={{ display: 'none' }}
-                        onChange={handleFileUpload}
-                    />
-                    <label htmlFor="file-upload">
-                        <PrimaryButton
-                            className={classes.bottom_upload_btn}
-                            label="Upload Audio"
-                            onClick={() => document.getElementById('file-upload')?.click()}
-                        />
-                    </label>
                 </div>
 
                 <div>                       
@@ -208,11 +208,8 @@ export const AuralizationPlot = ({
 
                     {isPopupDialogOpen && <SelectOptionsPopup isPopupDialogOpen={setIsPopupDialogOpen} isOptions = {"aur"}/>}      
                 </div>
-
-                
             </div>
-            
-           
+              
         </div>
     );
 };
