@@ -103,9 +103,21 @@ export const AuralizationPlot = ({
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const uploadedFile = event.target.files ? event.target.files[0] : null;
         
-        if (!uploadedFile) return;
+        if (!uploadedFile) {
+            alert("No file uploaded.");
+            console.log("No file uploaded.");
+            return;
+        } else if (uploadedFile.type !== 'audio/wav') {
+            alert("Invalid file type. Please upload a .wav file.");
+            console.log("Invalid file type. Please upload a .wav file.");
+            return;
+        } else if (uploadedFile.size > 10485760) {
+            alert("The uploaded file is larger than 10 MB.");
+            console.log("File size exceeds the limit of 10MB.");
+            return;
+        }
 
-        setFile(uploadedFile)
+        setFile(uploadedFile);
         
         const formData = new FormData();
         formData.append("file", uploadedFile);
