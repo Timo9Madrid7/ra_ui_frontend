@@ -43,7 +43,6 @@ export const AuralizationPlot = ({
     const {
         audioOptions,
         isLoadingAudioOptions,
-        audioOptionsError,
         selectedAudioOption,
         setSelectedAudioOption,
         formatedAudioOptions,
@@ -98,7 +97,6 @@ export const AuralizationPlot = ({
     const [isPopupDialogOpen, setIsPopupDialogOpen] = useState(false);
 
     // for upload button
-    const [file, setFile] = useState<File | null>(null);
     const handleFileUpload = async (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
@@ -117,8 +115,6 @@ export const AuralizationPlot = ({
             console.log('File size exceeds the limit of 10MB.');
             return;
         }
-
-        setFile(uploadedFile);
 
         const formData = new FormData();
         formData.append('file', uploadedFile);

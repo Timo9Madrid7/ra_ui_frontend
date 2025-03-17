@@ -1,44 +1,54 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { CustomNumberInput } from '@/components/UI/SolverSettings/components/Input/Number/Number';
 import SliderInput from '@/components/UI/SolverSettings/components/Input/Slider';
 import CheckboxInput from '@/components/UI/SolverSettings/components/Input/CheckBox';
 import { CustomInputProps, SimulationParamSetting } from '@/types';
 import RadioInput from '@/components/UI/SolverSettings/components/Input/Radio';
 
-const renderers: { [key: string]: (setting: SimulationParamSetting, value: any, onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void) => JSX.Element } = {
-    text: (setting, value, onChange) => (
+const renderers: {
+    [key: string]: (
+        setting: SimulationParamSetting,
+        settingState: { [key: string]: any },
+        setSettingsState: Dispatch<SetStateAction<{ [key: string]: any }>>
+    ) => JSX.Element;
+} = {
+    text: (setting, settingState, setSettingsState) => (
         <CustomNumberInput
-            value={value}
-            onChange={onChange}
+            settingState={settingState}
+            setSettingsState={setSettingsState}
             {...setting}
         />
     ),
-    slider: (setting, value, onChange) => (
+    slider: (setting, settingState, setSettingsState) => (
         <SliderInput
             setting={setting}
-            value={value}
-            onChange={onChange}
+            settingState={settingState}
+            setSettingsState={setSettingsState}
         />
     ),
-    checkbox: (setting, value, onChange) => (
+    checkbox: (setting, settingState, setSettingsState) => (
         <CheckboxInput
             setting={setting}
-            value={value}
-            onChange={onChange}
+            settingState={settingState}
+            setSettingsState={setSettingsState}
         />
     ),
-    radio: (setting, value, onChange) => (
+    radio: (setting, settingState, setSettingsState) => (
         <RadioInput
             setting={setting}
-            value={value}
-            onChange={onChange}
+            settingState={settingState}
+            setSettingsState={setSettingsState}
         />
     ),
 };
 
-const CustomInput: React.FC<CustomInputProps> = ({ setting, value, onChange }) => {
+const CustomInput: React.FC<CustomInputProps> = ({
+    setting,
+    settingState,
+    setSettingsState,
+}) => {
     const renderer = renderers[setting.display];
-    return renderer ? renderer(setting, value, onChange) : null;
+    return renderer ? renderer(setting, settingState, setSettingsState) : null;
 };
 
 export default CustomInput;

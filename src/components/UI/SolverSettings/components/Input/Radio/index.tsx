@@ -4,27 +4,41 @@ import styles from './style.module.scss';
 
 interface RadioInputProps {
     setting: SimulationParamSetting;
-    value: any;
-    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    settingState: { [key: string]: any };
+    setSettingsState: React.Dispatch<
+        React.SetStateAction<{ [key: string]: any }>
+    >;
 }
 
-const RadioInput: React.FC<RadioInputProps> = ({ setting, value, onChange }) => {
+const RadioInput: React.FC<RadioInputProps> = ({
+    setting,
+    settingState,
+    setSettingsState,
+}) => {
     return (
         <div className={styles.container}>
             <label className={styles.label}>{setting.name}</label>
-            <div className={styles["option-list"]}>
-                {setting.options && Object.keys(setting.options).map((option) => (
-                    <div key={option} className={styles.option}>
-                        <input
-                            type="radio"
-                            name={setting.name}
-                            value={option}
-                            checked={value === option}
-                            onChange={onChange}
-                        />
-                        <label>{option}</label>
-                    </div>
-                ))}
+            <div className={styles['option-list']}>
+                {setting.options &&
+                    Object.keys(setting.options).map((option) => (
+                        <div key={option} className={styles.option}>
+                            <input
+                                type='radio'
+                                name={setting.name}
+                                value={option}
+                                checked={settingState[setting.name] === option}
+                                onChange={(
+                                    e: React.ChangeEvent<HTMLInputElement>
+                                ) => {
+                                    setSettingsState({
+                                        ...settingState,
+                                        [setting.name]: e.target.value,
+                                    });
+                                }}
+                            />
+                            <label>{option}</label>
+                        </div>
+                    ))}
             </div>
         </div>
     );
