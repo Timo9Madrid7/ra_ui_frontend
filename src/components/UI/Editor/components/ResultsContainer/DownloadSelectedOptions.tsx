@@ -20,6 +20,7 @@ import {
     IconButton,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
+import toast from 'react-hot-toast';
 
 import { ClearRounded, Done } from '@mui/icons-material';
 import axios, { AxiosResponse } from 'axios';
@@ -72,7 +73,7 @@ export const DownloadSelectedOptions = ({checkedParam, checkedPlot, checkedAur, 
                     
         } catch(error: any)
         {
-            alert(error);
+            toast.error('Can not download the result',error);(error.response.data);
             if (error.response) {                
                 console.log(error.response.data);
                 console.log(error.response.status);

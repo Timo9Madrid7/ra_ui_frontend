@@ -50,10 +50,12 @@ export const DownloadResults = ({
             SimulationId: [simulationId],
         };        
         try {
-            const zipfile = await axios.post(`exports/custom_export`, selectedOptions, {responseType: 'blob'});
+            const zipfile = await axios.post(`exports/custom_export2`, selectedOptions, {responseType: 'blob'});
             return zipfile;
-        } catch (error) {
-            return error;
+        } catch (error: any) {
+            setIsLoading(false);
+            toast.error('Can not download the result',error);(error.response.data);            
+            return;
         }
     };
 
