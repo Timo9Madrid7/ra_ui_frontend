@@ -28,8 +28,16 @@ import { SelectPlotsOptions } from './SelectPlotsOptions';
 import { SelectAuralizationOptions } from './SelectAuralizationOptions';
 
 import { useResultsContext } from '../../../Results/context/ResultsContext';
+import { file } from 'jszip';
 
-export const DownloadSelectedOptions = ({checkedParam, checkedPlot, checkedAur}) => {
+export const DownloadSelectedOptions = ({checkedParam, checkedPlot, checkedAur, isOptions}) => {
+
+    let downloadFileName = 'SimulationResult.zip';
+    if (isOptions === 'param') { downloadFileName  = 'ParametersResult.zip'; }
+    else if (isOptions === 'plot') { downloadFileName  = 'PlotsResult.zip'; }
+    else if (isOptions === 'aur') { downloadFileName  = 'ImpulseResponseResult.zip'; }
+    // console.log("====================>>>>>>>>>>>>>>>>>>>>", fileName );
+
     
     const { availableComparisons } = useResultsContext();
     
@@ -78,7 +86,7 @@ export const DownloadSelectedOptions = ({checkedParam, checkedPlot, checkedAur})
     }
     const downloadFile = (response:AxiosResponse) => {
         const blob = new Blob([response.data], { type: 'application/zip' });
-        saveAs(blob, 'SimulationResult.zip');
+        saveAs(blob, downloadFileName);
     };
 
     return (        

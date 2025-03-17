@@ -82,7 +82,7 @@ export const SelectOptionsPopup = ({isPopupDialogOpen, isOptions}: { isPopupDial
                     <div>
                         <DownloadSelectedOptions checkedParam={checkedParam}
                             checkedPlot={checkedPlot}
-                            checkedAur={checkedAur}/>
+                            checkedAur={checkedAur} isOptions = {isOptions} />
                     </div>
                 </DialogActions>
             </form>
