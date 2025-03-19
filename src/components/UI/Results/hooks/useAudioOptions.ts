@@ -3,16 +3,16 @@ import { AnechoicOption } from '@/types';
 import axios from '@/client';
 import { useQuery } from '@tanstack/react-query';
 
-const getAudios = async () => {
-    const { data } = await axios.get('/auralizations/audiofiles');
+const getAudios = async (simulationId: string) => {
+    const { data } = await axios.get(`auralizations/${simulationId}/audiofiles`);
 
     return data;
 };
 
-const useGetAudios = (enabled = true) => {
+const useGetAudios = (enabled = true, simulationId: string) => {
     const query = useQuery<AnechoicOption[], Error>(
         ['anechoic'],
-        () => getAudios(),
+        () => getAudios(simulationId),
         {
             enabled: enabled,
             refetchOnWindowFocus: false,
@@ -22,7 +22,7 @@ const useGetAudios = (enabled = true) => {
     return query;
 };
 
-export const useAudioOptions = () => {
+export const useAudioOptions = (simulationId: string) => {
     // [1, 2, 3]
     const [selectedAudioOption, setSelectedAudioOption] =
         useState<AnechoicOption | null>(null);
@@ -30,7 +30,7 @@ export const useAudioOptions = () => {
         data: audioOptions,
         isLoading: isLoadingAudioOptions,
         error: audioOptionsError,
-    } = useGetAudios();
+    } = useGetAudios(true, simulationId);
 
     useEffect(() => {
         if (audioOptions && !isLoadingAudioOptions && !audioOptionsError) {

@@ -46,7 +46,7 @@ export const AuralizationPlot = ({
         selectedAudioOption,
         setSelectedAudioOption,
         formatedAudioOptions,
-    } = useAudioOptions();
+    } = useAudioOptions(simulationId);
 
     const {
         auralizationStatus,
@@ -133,6 +133,11 @@ export const AuralizationPlot = ({
 
             if (response.status == 200) {
                 const newAudioOption = result;
+                setSelectedAudioOption(newAudioOption);
+                setAuralizationStatus('');
+                setLoadingAuralization(false);
+                setAuralizationId(0);
+                setWavURL(null);
                 queryClient.setQueryData(
                     ['anechoic'],
                     (oldData: AnechoicOption[] | undefined) =>
