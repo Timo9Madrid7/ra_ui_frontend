@@ -4,6 +4,7 @@ import { useResultsContext } from '../../../Results/context/ResultsContext';
 import axios, { AxiosResponse } from 'axios';
 import saveAs from 'file-saver';
 import { Download } from '@mui/icons-material';
+import toast from 'react-hot-toast';
 
 export const DownloadAll = () => {
 
@@ -36,12 +37,12 @@ export const DownloadAll = () => {
         };
     
         try{
-            const response = await axios.post(`exports/custom_export`, selectedOptions, {responseType: 'blob'});
+            const response = await axios.post(`exports/custom_export2`, selectedOptions, {responseType: 'blob'});
             downloadFile(response);
                     
         } catch(error: any)
         {
-            alert(error);
+            toast.error('Can not download the result',error);(error);
             if (error.response) {                
                 console.log(error.response.data);
                 console.log(error.response.status);

@@ -163,12 +163,31 @@ export const AuralizationPlot = ({
                     }}
                 >
                     <div className={classes.plot_container}>
-                        <h2 className={classes.plot_header}>
-                            Impulse Response
-                        </h2>
-                        {impulseURL && (
-                            <ImpulseResponse impulseURL={impulseURL} />
-                        )}
+                        <div>
+                            <h2 className={classes.plot_header}>
+                                Impulse Response
+                            </h2>
+                            {impulseURL && (
+                                <ImpulseResponse impulseURL={impulseURL} />
+                            )}
+                            <div>
+                                <PrimaryButton
+                                    style={{"marginTop": '5%', "marginBottom": '5%'}}	
+                                    className={classes.bottom_download_btn}
+                                    label='Download Impulse Response'
+                                    // icon={<Download/>}
+                                    onClick={() => setIsPopupDialogOpen(true)}
+                                />
+
+                                {isPopupDialogOpen && (
+                                    <SelectOptionsPopup
+                                        isPopupDialogOpen={setIsPopupDialogOpen}
+                                        isOptions={'aur'}
+                                    />
+                                )}
+                            </div>
+                        </div>
+
                         <List>
                             <h2 className={classes.plot_header}>
                                 Convolved Sound
@@ -238,21 +257,7 @@ export const AuralizationPlot = ({
                     </div>
                 </div>
 
-                <div>
-                    <PrimaryButton
-                        className={classes.bottom_download_btn}
-                        label='Download Convolved Audio'
-                        // icon={<Download/>}
-                        onClick={() => setIsPopupDialogOpen(true)}
-                    />
-
-                    {isPopupDialogOpen && (
-                        <SelectOptionsPopup
-                            isPopupDialogOpen={setIsPopupDialogOpen}
-                            isOptions={'aur'}
-                        />
-                    )}
-                </div>
+                
             </div>
         </div>
     );

@@ -20,6 +20,7 @@ import {
     IconButton,
 } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
+import toast from 'react-hot-toast';
 
 import { ClearRounded, Done } from '@mui/icons-material';
 import axios, { AxiosResponse } from 'axios';
@@ -28,8 +29,16 @@ import { SelectPlotsOptions } from './SelectPlotsOptions';
 import { SelectAuralizationOptions } from './SelectAuralizationOptions';
 
 import { useResultsContext } from '../../../Results/context/ResultsContext';
+import { file } from 'jszip';
 
-export const DownloadSelectedOptions = ({checkedParam, checkedPlot, checkedAur}) => {
+export const DownloadSelectedOptions = ({checkedParam, checkedPlot, checkedAur, isOptions}) => {
+
+    let downloadFileName = 'SimulationResult.zip';
+    if (isOptions === 'param') { downloadFileName  = 'ParametersResult.zip'; }
+    else if (isOptions === 'plot') { downloadFileName  = 'PlotsResult.zip'; }
+    else if (isOptions === 'aur') { downloadFileName  = 'ImpulseResponseResult.zip'; }
+    // console.log("====================>>>>>>>>>>>>>>>>>>>>", fileName );
+
     
     const { availableComparisons } = useResultsContext();
     
@@ -64,7 +73,7 @@ export const DownloadSelectedOptions = ({checkedParam, checkedPlot, checkedAur})
                     
         } catch(error: any)
         {
-            alert(error);
+            toast.error('Can not download the result',error);(error.response.data);
             if (error.response) {                
                 console.log(error.response.data);
                 console.log(error.response.status);
@@ -78,7 +87,7 @@ export const DownloadSelectedOptions = ({checkedParam, checkedPlot, checkedAur})
     }
     const downloadFile = (response:AxiosResponse) => {
         const blob = new Blob([response.data], { type: 'application/zip' });
-        saveAs(blob, 'SimulationResult.zip');
+        saveAs(blob, downloadFileName);
     };
 
     return (        
