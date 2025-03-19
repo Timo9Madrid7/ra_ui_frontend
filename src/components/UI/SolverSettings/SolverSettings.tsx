@@ -280,6 +280,11 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
             );
         } else {
             // drop down menu
+            const defaultValue = formattedSimulationSettingOptions().find(
+                // @ts-ignore
+                (option) => option.id == taskType
+            );
+            if (!defaultValue) return null;
             return (
                 <SelectAutoComplete
                     options={formattedSimulationSettingOptions()}
@@ -287,6 +292,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
                     isOptionEqualToValue={(option, value) => {
                         return option.id === value.id;
                     }}
+                    defaultValue={defaultValue}
                     onChange={(_, value) => {
                         if (value) {
                             triggerSetTaskType(value.id.toString());
