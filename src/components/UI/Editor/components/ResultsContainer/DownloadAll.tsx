@@ -37,7 +37,7 @@ export const DownloadAll = () => {
         };
     
         try{
-            const response = await axios.post(`exports/custom_export2`, selectedOptions, {responseType: 'blob'});
+            const response = await axios.post(`exports/custom_export`, selectedOptions, {responseType: 'blob'});
             downloadFile(response);
                     
         } catch(error: any)
