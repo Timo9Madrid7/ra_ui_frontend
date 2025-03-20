@@ -50,7 +50,7 @@ export const DownloadResults = ({
             SimulationId: [simulationId],
         };        
         try {
-            const zipfile = await axios.post(`exports/custom_export2`, selectedOptions, {responseType: 'blob'});
+            const zipfile = await axios.post(`exports/custom_export`, selectedOptions, {responseType: 'blob'});
             return zipfile;
         } catch (error: any) {
             setIsLoading(false);
