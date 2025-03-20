@@ -5,10 +5,12 @@ export const SelectAutoComplete = ({
     options,
     label,
     onChange,
+    defaultValue,
     isOptionEqualToValue,
 }: {
     options: { label: string; id: number }[];
     label: string;
+    defaultValue?: { label: string; id: number };
     onChange: (
         event: React.SyntheticEvent,
         value: { label: string; id: number } | null
@@ -24,6 +26,7 @@ export const SelectAutoComplete = ({
             onChange={onChange}
             options={options}
             isOptionEqualToValue={isOptionEqualToValue}
+            defaultValue={defaultValue}
             renderInput={(params) => <TextField {...params} label={label} />}
         />
     );
