@@ -136,7 +136,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
                 simulationSettings: {
                     'Energy decay threshold': energyDecayThreshold,
                     'Impulse response length': 0,
-                    ...selectedSimulation.solverSettings.deSettings,
+                    ...selectedSimulation.solverSettings['simulationSettings'],
                 },
             },
         };
@@ -149,7 +149,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
             ...selectedSimulation,
             taskType: taskType,
             solverSettings: {
-                [customSettingParams.type]: {
+                simulationSettings: {
                     ...selectedSimulation.solverSettings[
                         customSettingParams.type
                     ],
