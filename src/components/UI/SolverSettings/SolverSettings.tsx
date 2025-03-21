@@ -132,7 +132,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
             taskType,
             settingsPreset: preset,
         };
-        if (PresetEnum.Advanced) {
+        if (taskType === PresetEnum.Advanced) {
             updatedSimulation.solverSettings = {
                 simulationSettings: {
                     'Energy decay threshold': energyDecayThreshold,
