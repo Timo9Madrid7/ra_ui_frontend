@@ -292,7 +292,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
                     {preset === PresetEnum.Default ? (
                         <p>
                             By default, the calculation will be running for{' '}
-                            <strong>both</strong> methods using the default
+                            <strong>DE</strong> method using the default
                             configuration and settings.
                         </p>
                     ) : (
