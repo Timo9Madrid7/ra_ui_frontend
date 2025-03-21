@@ -114,10 +114,9 @@ export interface DESettings {
  * Used in simulation object
  * */
 export interface SolverSettings {
-    dgSettings: DGSettings;
-    deSettings: DESettings;
-    // Index signature for any string key with an object value, this enable more methods option
-    [key: string]: { [key: string]: any };
+    dgSettings?: DGSettings;
+    deSettings?: DESettings;
+    [key: string]: any; // Allow any additional properties
 }
 
 /**

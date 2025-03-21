@@ -65,17 +65,17 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
 
     const { dgSettings } = selectedSimulation.solverSettings;
 
-    const [impulseResponseLength, setImpulseResponseLength] = useState<
-        number | undefined
-    >();
+    // const [impulseResponseLength, setImpulseResponseLength] = useState<
+    //     number | undefined
+    // >();
     const [taskType, setTaskType] = useState(selectedSimulation.taskType);
 
-    const [energyDecayThreshold, setEnergyDecayThreshold] = useState<
-        number | null
-    >(dgSettings?.energyDecayThreshold);
-    const [autoStop, setAutoStop] = useState(
-        dgSettings.energyDecayThreshold ? true : false
-    );
+    // const [energyDecayThreshold, setEnergyDecayThreshold] = useState<
+    //     number | null
+    // >(dgSettings?.energyDecayThreshold ?? null);
+    // const [autoStop, setAutoStop] = useState(
+    //     dgSettings?.energyDecayThreshold ? true : false
+    // );
     const [jsonPopup, setJsonPopup] = useState(false);
     const updateSolverSettings = useUpdateSolverSettings();
 
@@ -120,59 +120,70 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
     }, [customSettingParams]);
 
     const {
-        saveImpulseResponseLength,
-        saveEnergyDecayThreshold,
-        saveTaskType,
+        // saveImpulseResponseLength,
+        // saveEnergyDecayThreshold,
+        // saveTaskType,
         saveSettingsPreset,
     } = useSolverSettings();
 
     // Save the previous state
     const [prevPresetType, setPrevPresetType] = useState(preset);
     const [prevTaskType, setPrevTaskType] = useState(taskType);
-    const [prevAutoStop, setPrevAutoStop] = useState(autoStop);
+    // const [prevAutoStop, setPrevAutoStop] = useState(autoStop);
 
+    // TODO RISK
     useEffect(() => {
+        console.log('Im called here preset', preset, prevPresetType);
+
         if (preset !== prevPresetType) {
+            console.log('Im called here !');
             saveAndUpdate();
 
             // the default of all presets should be Autostop is ON
-            setAutoStop(true);
+            // setAutoStop(true);
         }
     }, [preset]);
 
     const saveAndUpdate = async () => {
+        console.log('saveAndUpdate');
         let taskType =
             preset === PresetEnum.Advanced
                 ? selectedSimulation.taskType
-                : MethodEnum.BOTH;
+                : MethodEnum.DE;
+        // TODO RISK
         const energyDecayThreshold =
             preset !== PresetEnum.Advanced
                 ? 35
-                : dgSettings.energyDecayThreshold;
-
+                : dgSettings?.energyDecayThreshold || 0;
+        console.log(taskType, '<---');
+        console.log(energyDecayThreshold, '<--- edt');
         setTaskType(taskType);
 
-        setEnergyDecayThreshold(energyDecayThreshold);
+        // setEnergyDecayThreshold(energyDecayThreshold);
         // Save new settings
         let updatedSimulation = {
             ...selectedSimulation,
             taskType,
             settingsPreset: preset,
             solverSettings: {
-                ...selectedSimulation.solverSettings,
-                deSettings: {
+                // ...selectedSimulation.solverSettings,
+                simulationSettings: {
+                    'Energy decay threshold': energyDecayThreshold,
+                    'Impulse response length': 0,
                     ...selectedSimulation.solverSettings.deSettings,
-                    energyDecayThreshold: energyDecayThreshold,
-                    impulseLengthSeconds: 0,
                 },
-                dgSettings: {
-                    ...selectedSimulation.solverSettings.dgSettings,
-                    energyDecayThreshold: energyDecayThreshold,
-                    impulseLengthSeconds: 0,
-                },
+                // dgSettings: {
+                //     ...selectedSimulation.solverSettings.dgSettings,
+                //     energyDecayThreshold: energyDecayThreshold,
+                //     impulseLengthSeconds: 0,
+                // },
             },
         };
-
+        console.log(
+            updatedSimulation,
+            'updated simulation',
+            selectedSimulation
+        );
         await updateSolverSettings(updatedSimulation);
     };
 
@@ -180,8 +191,10 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
         if (!customSettingParams) return;
         let updatedSimulation = {
             ...selectedSimulation,
+            taskType: taskType,
             solverSettings: {
-                ...selectedSimulation.solverSettings,
+                // remove the old settings
+                // ...selectedSimulation.solverSettings,
                 [customSettingParams.type]: {
                     ...selectedSimulation.solverSettings[
                         customSettingParams.type
@@ -197,8 +210,6 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
         setPrevTaskType(taskType);
         setTaskType(taskTypeIn);
 
-        saveTaskType(taskTypeIn);
-
         if (selectedSimulation.status == Status.Completed) {
             // In the next UI frame, set the radio button back
             setTimeout(() => {
@@ -208,9 +219,13 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
     };
 
     const triggerSetPreset = (presetIn: PresetEnum) => {
+        console.log(presetIn, '<---');
+        console.log(preset);
+
         setPrevPresetType(preset);
         setPreset(presetIn);
 
+        // TODO RISK
         saveSettingsPreset(presetIn);
 
         if (selectedSimulation.status == Status.Completed) {
@@ -221,26 +236,26 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
         }
     };
 
-    const triggerSetAutoStop = (type: string) => {
-        setPrevAutoStop(autoStop);
-        if (type === 'edt') {
-            setEnergyDecayThreshold(35);
-            saveEnergyDecayThreshold(35);
-            setAutoStop(true);
-        } else {
-            setAutoStop(false);
-            setEnergyDecayThreshold(null);
-            saveEnergyDecayThreshold(null);
-        }
+    // const triggerSetAutoStop = (type: string) => {
+    //     setPrevAutoStop(autoStop);
+    //     if (type === 'edt') {
+    //         setEnergyDecayThreshold(35);
+    //         saveEnergyDecayThreshold(35);
+    //         setAutoStop(true);
+    //     } else {
+    //         setAutoStop(false);
+    //         setEnergyDecayThreshold(null);
+    //         saveEnergyDecayThreshold(null);
+    //     }
 
-        if (selectedSimulation.status == Status.Completed) {
-            // In the next UI frame, set the radio button back
-            setTimeout(() => {
-                setAutoStop(prevAutoStop);
-                setEnergyDecayThreshold(prevAutoStop ? 35 : null);
-            });
-        }
-    };
+    //     if (selectedSimulation.status == Status.Completed) {
+    //         // In the next UI frame, set the radio button back
+    //         setTimeout(() => {
+    //             setAutoStop(prevAutoStop);
+    //             setEnergyDecayThreshold(prevAutoStop ? 35 : null);
+    //         });
+    //     }
+    // };
 
     const { formattedSimulationSettingOptions } = useSimulationSettingOptions(
         !isStaticRender
@@ -358,7 +373,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
                                     </p>
                                     {AvailabelMethodSelector(isStaticRender)}
                                 </div>
-                                <h3 className={styles.section_title}>
+                                {/* <h3 className={styles.section_title}>
                                     Customize Settings
                                 </h3>
                                 <div className={styles.customize_section}>
@@ -452,7 +467,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
                                             blurOnStep={false}
                                         />
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                             <Divider />
                             {isCustomSettingParamsLoading ? (
@@ -477,7 +492,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
                                     )}
                                     <div className={styles['flex-container']}>
                                         <h3 className={styles.section_title}>
-                                            Params Setting
+                                            Edit Settings
                                         </h3>
                                         <DefaultButton
                                             label='Edit with JSON'
