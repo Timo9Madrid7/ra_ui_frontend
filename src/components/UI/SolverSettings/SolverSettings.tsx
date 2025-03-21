@@ -127,19 +127,28 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
                 ? 35
                 : dgSettings?.energyDecayThreshold || 0;
         setTaskType(taskType);
-
         let updatedSimulation = {
             ...selectedSimulation,
             taskType,
             settingsPreset: preset,
-            solverSettings: {
+        };
+        if (PresetEnum.Advanced) {
+            updatedSimulation.solverSettings = {
                 simulationSettings: {
                     'Energy decay threshold': energyDecayThreshold,
                     'Impulse response length': 0,
                     ...selectedSimulation.solverSettings['simulationSettings'],
                 },
-            },
-        };
+            };
+        } else {
+            // TODO still hardcoded - default settings
+            updatedSimulation.solverSettings = {
+                simulationSettings: {
+                    'Energy decay threshold': energyDecayThreshold,
+                    'Impulse response length': 0,
+                },
+            };
+        }
         await updateSolverSettings(updatedSimulation);
     };
 
