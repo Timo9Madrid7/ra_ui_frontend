@@ -29,7 +29,6 @@ export const DownloadAll = () => {
             Auralization: aur,
             SimulationId: simulationID,
         };
-
         try {
             const response = await axios.post(
                 `exports/custom_export`,

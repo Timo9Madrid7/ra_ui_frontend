@@ -118,10 +118,6 @@ export const DownloadResults = ({
                 }}
             >
                 <span className={classes.menu_title}> Download </span>
-
-                {/*<MenuItem onClick={handleDownloadParameters} className={classes.menu_item}>*/}
-                {/*  <span>Parameters values (.xlsx)</span>*/}
-                {/*</MenuItem>*/}
                 <MenuItem
                     onClick={handleDownloadSource}
                     className={classes.menu_item}
@@ -129,9 +125,6 @@ export const DownloadResults = ({
                     <FolderZipOutlinedIcon />{' '}
                     <span>Simulation Result(.zip)</span>
                 </MenuItem>
-                {/* <MenuItem onClick={handleDownloadSource} className={classes.menu_item}> */}
-                {/* <FolderZipOutlinedIcon /> <span>IRs for selected source (.zip)</span> */}
-                {/* </MenuItem> */}
             </Menu>
         </>
     );
