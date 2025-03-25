@@ -143,8 +143,8 @@ export const ImportModelStep1 = (
 
             <Uploader
                 disabled={importStarted}
-                accept={'.obj'}
-                acceptText="OBJ file accepted only"
+                accept={'.obj,.dxf'}
+                acceptText="OBJ or DXF file accepted only"
                 onChange={onChangeFileUpload}
                 onDrop={onDropFileUpload}
             />

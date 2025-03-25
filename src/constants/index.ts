@@ -173,3 +173,11 @@ export const DEFAULT_CAMERA_SETTINGS: Partial<
     up: new Vector3(0, 0, 1),
 };
 
+/**
+ * These are all the available ** auralization options **
+ */
+export const AURALIZATION_OPTIONS = [ 
+    // {value: 'wav', label: '.wav (Auralization)'},
+    {value: 'wavIR', label: '.wav (Impulse Response)'},
+    {value: 'csvIR', label: 'Impulse Response (csv)'}   
+];
