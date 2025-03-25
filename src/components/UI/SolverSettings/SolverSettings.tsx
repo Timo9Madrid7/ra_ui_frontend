@@ -15,7 +15,6 @@ import {
 import {
     DefaultButton,
     Dialog,
-    NumberInput,
     useSolverSettings,
     useUpdateSolverSettings,
 } from '@/components';
@@ -27,8 +26,6 @@ import { SimulationParamSetting, Simulation, Status } from '@/types';
 import { PresetEnum, MethodEnum } from '@/enums';
 import { DE_TEXT, DG_TEXT } from '@/constants';
 
-const minImpulseResponse = 0.005;
-const maxImpulseResponse = 20;
 const isStaticRender: boolean = false; // true: static render; false: dynamic render
 
 type SolverSettingsProps = {
@@ -42,7 +39,6 @@ import { SelectAutoComplete } from '@/components/Base/Select/SelectAutoComplete'
 import { useSimulationSettingOptions } from './hooks/useSimulationSettingOptions';
 import CustomInput from './components/CustomInput';
 import { JSONEditor } from './components/JSONEditor';
-import { format } from 'path/posix';
 
 export const SolverSettings: FC<SolverSettingsProps> = ({
     selectedSimulation,
@@ -65,17 +61,8 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
 
     const { dgSettings } = selectedSimulation.solverSettings;
 
-    const [impulseResponseLength, setImpulseResponseLength] = useState<
-        number | undefined
-    >();
     const [taskType, setTaskType] = useState(selectedSimulation.taskType);
 
-    const [energyDecayThreshold, setEnergyDecayThreshold] = useState<
-        number | null
-    >(dgSettings?.energyDecayThreshold);
-    const [autoStop, setAutoStop] = useState(
-        dgSettings.energyDecayThreshold ? true : false
-    );
     const [jsonPopup, setJsonPopup] = useState(false);
     const updateSolverSettings = useUpdateSolverSettings();
 
@@ -119,24 +106,14 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
         }
     }, [customSettingParams]);
 
-    const {
-        saveImpulseResponseLength,
-        saveEnergyDecayThreshold,
-        saveTaskType,
-        saveSettingsPreset,
-    } = useSolverSettings();
+    const { saveSettingsPreset } = useSolverSettings();
 
-    // Save the previous state
     const [prevPresetType, setPrevPresetType] = useState(preset);
     const [prevTaskType, setPrevTaskType] = useState(taskType);
-    const [prevAutoStop, setPrevAutoStop] = useState(autoStop);
 
     useEffect(() => {
         if (preset !== prevPresetType) {
             saveAndUpdate();
-
-            // the default of all presets should be Autostop is ON
-            setAutoStop(true);
         }
     }, [preset]);
 
@@ -144,35 +121,34 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
         let taskType =
             preset === PresetEnum.Advanced
                 ? selectedSimulation.taskType
-                : MethodEnum.BOTH;
+                : MethodEnum.DE;
         const energyDecayThreshold =
             preset !== PresetEnum.Advanced
                 ? 35
-                : dgSettings.energyDecayThreshold;
-
+                : dgSettings?.energyDecayThreshold || 0;
         setTaskType(taskType);
-
-        setEnergyDecayThreshold(energyDecayThreshold);
-        // Save new settings
         let updatedSimulation = {
             ...selectedSimulation,
             taskType,
             settingsPreset: preset,
-            solverSettings: {
-                ...selectedSimulation.solverSettings,
-                deSettings: {
-                    ...selectedSimulation.solverSettings.deSettings,
-                    energyDecayThreshold: energyDecayThreshold,
-                    impulseLengthSeconds: 0,
-                },
-                dgSettings: {
-                    ...selectedSimulation.solverSettings.dgSettings,
-                    energyDecayThreshold: energyDecayThreshold,
-                    impulseLengthSeconds: 0,
-                },
-            },
         };
-
+        if (taskType === PresetEnum.Advanced) {
+            updatedSimulation.solverSettings = {
+                simulationSettings: {
+                    'Energy decay threshold': energyDecayThreshold,
+                    'Impulse response length': 0,
+                    ...selectedSimulation.solverSettings['simulationSettings'],
+                },
+            };
+        } else {
+            // TODO still hardcoded - default settings
+            updatedSimulation.solverSettings = {
+                simulationSettings: {
+                    'Energy decay threshold': energyDecayThreshold,
+                    'Impulse response length': 0,
+                },
+            };
+        }
         await updateSolverSettings(updatedSimulation);
     };
 
@@ -180,9 +156,9 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
         if (!customSettingParams) return;
         let updatedSimulation = {
             ...selectedSimulation,
+            taskType: taskType,
             solverSettings: {
-                ...selectedSimulation.solverSettings,
-                [customSettingParams.type]: {
+                simulationSettings: {
                     ...selectedSimulation.solverSettings[
                         customSettingParams.type
                     ],
@@ -197,8 +173,6 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
         setPrevTaskType(taskType);
         setTaskType(taskTypeIn);
 
-        saveTaskType(taskTypeIn);
-
         if (selectedSimulation.status == Status.Completed) {
             // In the next UI frame, set the radio button back
             setTimeout(() => {
@@ -208,36 +182,19 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
     };
 
     const triggerSetPreset = (presetIn: PresetEnum) => {
+        console.log(presetIn, '<---');
+        console.log(preset);
+
         setPrevPresetType(preset);
         setPreset(presetIn);
 
+        // TODO RISK
         saveSettingsPreset(presetIn);
 
         if (selectedSimulation.status == Status.Completed) {
             // In the next UI frame, set the radio button back
             setTimeout(() => {
                 setPreset(prevPresetType);
-            });
-        }
-    };
-
-    const triggerSetAutoStop = (type: string) => {
-        setPrevAutoStop(autoStop);
-        if (type === 'edt') {
-            setEnergyDecayThreshold(35);
-            saveEnergyDecayThreshold(35);
-            setAutoStop(true);
-        } else {
-            setAutoStop(false);
-            setEnergyDecayThreshold(null);
-            saveEnergyDecayThreshold(null);
-        }
-
-        if (selectedSimulation.status == Status.Completed) {
-            // In the next UI frame, set the radio button back
-            setTimeout(() => {
-                setAutoStop(prevAutoStop);
-                setEnergyDecayThreshold(prevAutoStop ? 35 : null);
             });
         }
     };
@@ -335,7 +292,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
                     {preset === PresetEnum.Default ? (
                         <p>
                             By default, the calculation will be running for{' '}
-                            <strong>both</strong> methods using the default
+                            <strong>DE</strong> method using the default
                             configuration and settings.
                         </p>
                     ) : (
@@ -357,101 +314,6 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
                                         ) methods.
                                     </p>
                                     {AvailabelMethodSelector(isStaticRender)}
-                                </div>
-                                <h3 className={styles.section_title}>
-                                    Customize Settings
-                                </h3>
-                                <div className={styles.customize_section}>
-                                    <RadioGroup
-                                        value={autoStop ? 'edt' : 'irl'}
-                                        name='row-radio-buttons-group'
-                                        onChange={(e) =>
-                                            triggerSetAutoStop(e.target.value)
-                                        }
-                                    >
-                                        <FormControlLabel
-                                            control={<Radio size={'small'} />}
-                                            value='edt'
-                                            disabled={false}
-                                            label='Energy decay threshold'
-                                        />
-                                        <FormControlLabel
-                                            value='irl'
-                                            control={<Radio size={'small'} />}
-                                            label='Impulse response length'
-                                        />
-                                    </RadioGroup>
-
-                                    <div className={styles.inputs}>
-                                        <NumberInput
-                                            label={''}
-                                            value={
-                                                energyDecayThreshold ??
-                                                undefined
-                                            }
-                                            onChange={(value) => {
-                                                if (
-                                                    value === null ||
-                                                    value == undefined
-                                                )
-                                                    setEnergyDecayThreshold(
-                                                        null
-                                                    );
-                                                else
-                                                    setEnergyDecayThreshold(
-                                                        value
-                                                    );
-                                            }}
-                                            decimals={0}
-                                            min={10}
-                                            max={60}
-                                            endAdornment={'dB'}
-                                            step={1}
-                                            disabled={!autoStop}
-                                            blurOnStep={false}
-                                        />
-                                        <NumberInput
-                                            label={
-                                                autoStop ? (
-                                                    <span
-                                                        style={{
-                                                            color: '#999999',
-                                                        }}
-                                                    ></span>
-                                                ) : (
-                                                    ''
-                                                )
-                                            }
-                                            value={
-                                                autoStop
-                                                    ? undefined
-                                                    : impulseResponseLength
-                                            }
-                                            onChange={setImpulseResponseLength}
-                                            onBlur={(value) => {
-                                                if (
-                                                    value !== undefined &&
-                                                    value < minImpulseResponse
-                                                ) {
-                                                    value = minImpulseResponse;
-                                                    setImpulseResponseLength(
-                                                        minImpulseResponse
-                                                    );
-                                                }
-
-                                                saveImpulseResponseLength(
-                                                    value
-                                                );
-                                            }}
-                                            decimals={3}
-                                            min={0} // Needs to be set to 0 so that the step doesn't react weird. Actually this min is 0.005
-                                            max={maxImpulseResponse}
-                                            endAdornment={'s'}
-                                            step={0.1}
-                                            disabled={autoStop}
-                                            blurOnStep={false}
-                                        />
-                                    </div>
                                 </div>
                             </div>
                             <Divider />
@@ -477,7 +339,7 @@ export const SolverSettings: FC<SolverSettingsProps> = ({
                                     )}
                                     <div className={styles['flex-container']}>
                                         <h3 className={styles.section_title}>
-                                            Params Setting
+                                            Edit Settings
                                         </h3>
                                         <DefaultButton
                                             label='Edit with JSON'

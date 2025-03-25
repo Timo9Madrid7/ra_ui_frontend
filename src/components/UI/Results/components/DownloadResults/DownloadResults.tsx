@@ -35,26 +35,30 @@ export const DownloadResults = ({
         setAnchorEl(null);
     };
 
-    const parameters = ['edt', 't20', 't30', 'c80', 'd50', 'ts', 'spl_t0_freq' ]
-    const plots = ['125Hz', '250Hz', '500Hz', '1000Hz', '2000Hz'] 
-    const aur = ['wavIR', 'csvIR']
-    const xlsx = ["true"];  
+    const parameters = ['edt', 't20', 't30', 'c80', 'd50', 'ts', 'spl_t0_freq'];
+    const plots = ['125Hz', '250Hz', '500Hz', '1000Hz', '2000Hz'];
+    const aur = ['wavIR', 'csvIR'];
+    const xlsx = ['true'];
 
     const getExportSolveResult = async (simulationId: string) => {
-
         const selectedOptions = {
             xlsx: xlsx,
             Parameters: parameters,
             EDC: plots,
             Auralization: aur,
             SimulationId: [simulationId],
-        };        
+        };
         try {
-            const zipfile = await axios.post(`exports/custom_export`, selectedOptions, {responseType: 'blob'});
+            const zipfile = await axios.post(
+                `exports/custom_export`,
+                selectedOptions,
+                { responseType: 'blob' }
+            );
             return zipfile;
         } catch (error: any) {
             setIsLoading(false);
-            toast.error('Can not download the result',error);(error.response.data);            
+            toast.error('Can not download the result', error);
+            error.response.data;
             return;
         }
     };
@@ -114,10 +118,6 @@ export const DownloadResults = ({
                 }}
             >
                 <span className={classes.menu_title}> Download </span>
-
-                {/*<MenuItem onClick={handleDownloadParameters} className={classes.menu_item}>*/}
-                {/*  <span>Parameters values (.xlsx)</span>*/}
-                {/*</MenuItem>*/}
                 <MenuItem
                     onClick={handleDownloadSource}
                     className={classes.menu_item}
@@ -125,9 +125,6 @@ export const DownloadResults = ({
                     <FolderZipOutlinedIcon />{' '}
                     <span>Simulation Result(.zip)</span>
                 </MenuItem>
-                {/* <MenuItem onClick={handleDownloadSource} className={classes.menu_item}> */}
-                {/* <FolderZipOutlinedIcon /> <span>IRs for selected source (.zip)</span> */}
-                {/* </MenuItem> */}
             </Menu>
         </>
     );

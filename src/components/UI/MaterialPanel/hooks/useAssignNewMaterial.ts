@@ -54,14 +54,14 @@ export const useAssignNewMaterial = () => {
                     layerIdByMaterialId: newMaterialIdByObjectId[simulation.id],
                     solverSettings: {
                         ...simulation.solverSettings,
-                        deSettings: {
-                            ...simulation.solverSettings.deSettings,
-                            impulseLengthSeconds: 0,
-                        },
-                        dgSettings: {
-                            ...simulation.solverSettings.dgSettings,
-                            impulseLengthSeconds: 0,
-                        },
+                        // deSettings: {
+                        //     ...simulation.solverSettings.deSettings,
+                        //     impulseLengthSeconds: 0,
+                        // },
+                        // dgSettings: {
+                        //     ...simulation.solverSettings.dgSettings,
+                        //     impulseLengthSeconds: 0,
+                        // },
                     },
                 };
 
